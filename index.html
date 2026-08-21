@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Quarterback Maxx: Electronic Handheld</title>
+  <title>Party Quarters: You Drink / They Drink Edition</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,7 +14,7 @@
       touch-action: manipulation;
     }
     body {
-      background: #05020a;
+      background: #08030c;
       color: #fff;
       font-family: 'Courier New', Courier, monospace;
       display: flex;
@@ -26,7 +26,7 @@
       overflow-x: hidden;
     }
 
-    /* Outer Handheld Console Plastic Shell */
+    /* Handheld Shell */
     .handheld-console {
       width: 100%;
       max-width: 380px;
@@ -40,7 +40,7 @@
       align-items: center;
     }
 
-    /* Handheld Header Branding */
+    /* Console Branding */
     .brand-plate {
       width: 100%;
       background: #1a0808;
@@ -48,7 +48,7 @@
       border-radius: 6px;
       padding: 6px;
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       box-shadow: inset 0 0 8px #000;
     }
     .brand-title {
@@ -64,7 +64,7 @@
       letter-spacing: 1px;
     }
 
-    /* Top Stats & Meters Bezel */
+    /* LED Meters */
     .meters-bezel {
       width: 100%;
       background: #111;
@@ -83,7 +83,7 @@
       text-align: center;
     }
     .led-label {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       color: #888;
       display: block;
     }
@@ -94,11 +94,11 @@
       font-weight: bold;
     }
 
-    /* Screen Housing Frame */
+    /* Screen Housing */
     .screen-housing {
       width: 100%;
-      background: #020f04;
-      border: 4px solid #1c2e1f;
+      background: #0d0614;
+      border: 4px solid #231133;
       border-radius: 12px;
       padding: 8px;
       box-shadow: inset 0 0 15px #000;
@@ -109,31 +109,30 @@
       height: auto;
       aspect-ratio: 3 / 4;
       display: block;
-      background: #041407;
+      background: #150921;
       border-radius: 4px;
     }
 
-    /* Dialogue Text Display */
     .status-readout {
-      margin-top: 8px;
-      font-size: 0.7rem;
-      color: #39ff14;
-      text-shadow: 0 0 4px #39ff14;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #ff00ff;
+      text-shadow: 0 0 4px #ff00ff;
       text-align: center;
-      height: 16px;
+      height: 18px;
+      font-weight: bold;
     }
 
-    /* Console Control Panel (Built onto Casing) */
+    /* Controls Built-In */
     .control-panel {
       width: 100%;
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 8px;
     }
 
-    /* Cross D-Pad */
     .dpad-container {
       display: grid;
       grid-template-columns: repeat(3, 36px);
@@ -157,31 +156,30 @@
       transform: translateY(2px);
       box-shadow: 0 1px 0 #111;
       background: #222;
-      color: #ff3333;
+      color: #ff00ff;
     }
 
-    /* Big Action Button */
     .action-group {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
     }
-    .big-kick-btn {
+    .big-flip-btn {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ff4444, #990000);
-      border: 3px solid #550000;
+      background: radial-gradient(circle at 30% 30%, #ff00aa, #880055);
+      border: 3px solid #440022;
       color: #fff;
       font-weight: bold;
       font-size: 0.85rem;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 5px 0 #330000;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 5px 0 #220011;
       cursor: pointer;
     }
-    .big-kick-btn:active {
+    .big-flip-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 2px 0 #330000;
+      box-shadow: 0 2px 0 #220011;
     }
     .btn-label {
       font-size: 0.65rem;
@@ -189,9 +187,8 @@
       font-weight: bold;
     }
 
-    /* Auxiliary Reset / Stats Buttons */
     .aux-bar {
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
       gap: 12px;
       width: 100%;
@@ -213,7 +210,7 @@
       box-shadow: 0 1px 0 #221e18;
     }
 
-    /* Stats Modal */
+    /* Party Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -225,37 +222,36 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal {
       background: #111;
-      border: 2px solid #ff3333;
+      border: 2px solid #ff00ff;
       border-radius: 8px;
       padding: 16px; width: 280px; text-align: center;
     }
-    .modal h2 { color: #ff3333; font-size: 1.2rem; margin-bottom: 10px; }
+    .modal h2 { color: #ff00ff; font-size: 1.2rem; margin-bottom: 10px; }
     .stat-row { display: flex; justify-content: space-between; margin: 6px 0; font-size: 0.85rem; }
   </style>
 </head>
 <body>
 
-  <!-- Physical Handheld Console Casing -->
   <div class="handheld-console">
     
     <div class="brand-plate">
-      <div class="brand-title">ELECTRONIC QUARTERBACK</div>
-      <div class="brand-sub">MAXXCO HANDHELD LED SYSTEM</div>
+      <div class="brand-title">PARTY QUARTERS MAXX</div>
+      <div class="brand-sub">MAKE IT = THEY DRINK | MISS = PASS COIN</div>
     </div>
 
-    <!-- LED Meters Display Panel -->
+    <!-- LED Meters -->
     <div class="meters-bezel">
       <div class="led-meter">
-        <span class="led-label">PASSES</span>
-        <span class="led-num" id="meter-passes">00</span>
+        <span class="led-label">YOU DRINK</span>
+        <span class="led-num" id="meter-youdrink">00</span>
       </div>
       <div class="led-meter">
-        <span class="led-label">MISSES</span>
-        <span class="led-num" id="meter-misses">00</span>
+        <span class="led-label">THEY DRINK</span>
+        <span class="led-num" id="meter-theydrink">00</span>
       </div>
       <div class="led-meter">
-        <span class="led-label">CHANCES</span>
-        <span class="led-num" id="meter-chances">10</span>
+        <span class="led-label">TURN</span>
+        <span class="led-num" id="meter-turn">YOU</span>
       </div>
       <div class="led-meter">
         <span class="led-label">SCORE</span>
@@ -263,56 +259,50 @@
       </div>
     </div>
 
-    <!-- Green LED Screen Area -->
+    <!-- Table Screen Display -->
     <div class="screen-housing">
       <canvas id="gameCanvas" width="300" height="380"></canvas>
-      <div class="status-readout" id="status-msg">READY. SNAP / KICK TOKEN!</div>
+      <div class="status-readout" id="status-msg">YOUR TURN! AIM & FLIP THE TOKEN!</div>
     </div>
 
-    <!-- Controls Built On The Plastic Body -->
+    <!-- Handheld Controls -->
     <div class="control-panel">
-      <!-- Cross Directional Pad -->
       <div class="dpad-container">
         <div></div>
-        <button class="dpad-btn" onclick="moveQB(0, -12)">▲</button>
+        <button class="dpad-btn" onclick="moveCoin(0, -12)">▲</button>
         <div></div>
-        <button class="dpad-btn" onclick="moveQB(-12, 0)">◄</button>
+        <button class="dpad-btn" onclick="moveCoin(-12, 0)">◄</button>
         <div></div>
-        <button class="dpad-btn" onclick="moveQB(12, 0)">►</button>
+        <button class="dpad-btn" onclick="moveCoin(12, 0)">►</button>
         <div></div>
-        <button class="dpad-btn" onclick="moveQB(0, 12)">▼</button>
+        <button class="dpad-btn" onclick="moveCoin(0, 12)">▼</button>
         <div></div>
       </div>
 
-      <!-- Action Kick Button -->
       <div class="action-group">
-        <button class="big-kick-btn" onclick="snapOrKick()">KICK</button>
-        <span class="btn-label">SNAP / KICK</span>
+        <button class="big-flip-btn" id="flip-btn" onclick="flipCoin()">FLIP</button>
+        <span class="btn-label">BOUNCE TOKEN</span>
       </div>
     </div>
 
-    <!-- Console Auxiliary Buttons -->
     <div class="aux-bar">
-      <button class="aux-btn" onclick="resetGame()">RESET GAME</button>
-      <button class="aux-btn" onclick="showStats()">STATS</button>
+      <button class="aux-btn" onclick="resetGame()">NEW MATCH</button>
+      <button class="aux-btn" onclick="showStats()">MATCH STATS</button>
     </div>
   </div>
 
-  <!-- Stats Overlay Modal -->
   <div class="modal-overlay" id="statsModal">
     <div class="modal">
-      <h2>DRIVE STATS</h2>
+      <h2>PARTY MATCH RESULTS</h2>
       <div class="stat-row"><span>SCORE:</span><span id="stat-score">0</span></div>
-      <div class="stat-row"><span>PASSES:</span><span id="stat-passes">0</span></div>
-      <div class="stat-row"><span>MISSES:</span><span id="stat-misses">0</span></div>
-      <div class="stat-row"><span>RATE:</span><span id="stat-rate">0%</span></div>
+      <div class="stat-row"><span>THEY DRANK:</span><span id="stat-theydrink">0</span></div>
+      <div class="stat-row"><span>YOU DRANK:</span><span id="stat-youdrink">0</span></div>
       <br>
-      <button class="aux-btn" onclick="closeStats()">CONTINUE</button>
+      <button class="aux-btn" onclick="closeStats()">PLAY AGAIN</button>
     </div>
   </div>
 
   <script>
-    // Audio Synthesizer for LED Handheld Sounds
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(freq, type, duration) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -329,180 +319,224 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const lineOfScrimmageY = 280;
-    let score = 0, chances = 10, passes = 0, misses = 0;
+    const bounceLineY = 270;
+    let score = 0, yourDrinks = 0, theirDrinks = 0;
+    let turn = 'YOU'; // 'YOU' or 'CPU'
 
     const mgmCoinImg = new Image();
     mgmCoinImg.src = 'tranparent mgm coin1.jpg';
 
-    let token = { x: 150, y: 320, radius: 10, vx: 0, vy: 0, inAir: false, rotation: 0 };
-    let qbPos = { x: 150, y: 320 };
+    let token = { x: 150, y: 330, radius: 10, vx: 0, vy: 0, inAir: false, rotation: 0, scale: 1 };
+    let startPos = { x: 150, y: 330 };
 
-    const goalpost = { xMin: 110, xMax: 190, y: 35, crossbarY: 50 };
+    const mgmShotGlass = { x: 130, y: 30, w: 40, h: 35 };
+    const sideGlasses = [
+      { x: 40, y: 80, w: 32, h: 28 },
+      { x: 228, y: 80, w: 32, h: 28 },
+      { x: 85, y: 130, w: 32, h: 28 },
+      { x: 183, y: 130, w: 32, h: 28 }
+    ];
 
-    // 7 Red LED Defender Dashes
-    const defenders = [];
-    function initDefenders() {
-      defenders.length = 0;
-      const yPos = [80, 115, 150, 185, 220, 245, 265];
-      for (let i = 0; i < 7; i++) {
-        defenders.push({
-          x: Math.random() * 200 + 30,
+    const obstacles = [];
+    function initObstacles() {
+      obstacles.length = 0;
+      const yPos = [170, 210, 240];
+      for (let i = 0; i < 3; i++) {
+        obstacles.push({
+          x: Math.random() * 180 + 30,
           y: yPos[i],
-          width: 22,
-          height: 6,
-          vx: (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.0)
+          radius: 12,
+          vx: (Math.random() > 0.5 ? 1 : -1) * (1.3 + Math.random() * 0.8)
         });
       }
     }
-    initDefenders();
+    initObstacles();
 
-    function moveQB(dx, dy) {
+    function moveCoin(dx, dy) {
+      if (token.inAir || turn !== 'YOU') return;
+      startPos.x = Math.max(20, Math.min(canvas.width - 20, startPos.x + dx));
+      startPos.y = Math.max(bounceLineY + 15, Math.min(canvas.height - 20, startPos.y + dy));
+      token.x = startPos.x; token.y = startPos.y;
+      playBeep(240, 'square', 0.03);
+    }
+
+    function flipCoin() {
       if (token.inAir) return;
-      qbPos.x = Math.max(20, Math.min(canvas.width - 20, qbPos.x + dx));
-      qbPos.y = Math.max(lineOfScrimmageY, Math.min(canvas.height - 20, qbPos.y + dy));
-      token.x = qbPos.x;
-      token.y = qbPos.y;
-      playBeep(180, 'square', 0.03);
-    }
-
-    function snapOrKick() {
-      if (token.inAir || chances <= 0) return;
-      token.vx = (Math.random() - 0.5) * 1.5;
-      token.vy = -6.8;
-      token.inAir = true;
-      chances--;
-      updateDisplay();
-      document.getElementById('status-msg').textContent = 'TOKEN IN FLIGHT!';
-      playBeep(300, 'square', 0.08);
-    }
-
-    function recordResult(success) {
-      if (success) {
-        score += 300; passes++;
-        document.getElementById('status-msg').textContent = 'GOAL IS GOOD! +300';
-        playBeep(523, 'square', 0.15);
+      if (turn === 'YOU') {
+        token.vx = (Math.random() - 0.5) * 1.8;
+        token.vy = -7.2;
       } else {
-        misses++;
-        document.getElementById('status-msg').textContent = 'NO GOOD! MISSED!';
-        playBeep(120, 'sawtooth', 0.15);
+        // CPU Aim Simulation
+        token.x = Math.random() * 160 + 70;
+        token.y = 330;
+        token.vx = (Math.random() - 0.5) * 1.5;
+        token.vy = -7.0;
+      }
+      token.inAir = true;
+      document.getElementById('status-msg').textContent = turn + ' BOUNCED THE TOKEN!';
+      playBeep(320, 'square', 0.08);
+    }
+
+    function recordResult(hitType) {
+      if (turn === 'YOU') {
+        if (hitType === 'MGM') {
+          score += 500; theirDrinks += 2;
+          document.getElementById('status-msg').textContent = '★ MGM SHOT! THEY DRINK 2 SHOTS! ★';
+          playBeep(659, 'square', 0.2);
+        } else if (hitType === 'GLASS') {
+          score += 100; theirDrinks++;
+          document.getElementById('status-msg').textContent = 'SANK IT! THEY DRINK!';
+          playBeep(440, 'square', 0.15);
+        } else {
+          document.getElementById('status-msg').textContent = 'MISSED! PASSING TO PLAYER 2...';
+          turn = 'CPU';
+          playBeep(120, 'sawtooth', 0.15);
+          setTimeout(cpuTurn, 1600);
+        }
+      } else {
+        // CPU Turn
+        if (hitType === 'MGM' || hitType === 'GLASS') {
+          yourDrinks++;
+          document.getElementById('status-msg').textContent = 'P2 MADE IT! YOU DRINK! 🍺';
+          playBeep(200, 'sawtooth', 0.25);
+          setTimeout(cpuTurn, 1600);
+        } else {
+          document.getElementById('status-msg').textContent = 'P2 MISSED! YOUR TURN!';
+          turn = 'YOU';
+          playBeep(523, 'square', 0.12);
+        }
       }
       updateDisplay();
       resetToken();
     }
 
+    function cpuTurn() {
+      if (turn !== 'CPU') return;
+      document.getElementById('status-msg').textContent = 'PLAYER 2 IS AIMING...';
+      setTimeout(flipCoin, 1200);
+    }
+
     function resetToken() {
-      token.x = qbPos.x; token.y = qbPos.y;
-      token.vx = 0; token.vy = 0; token.inAir = false;
-      if (chances <= 0) {
-        document.getElementById('status-msg').textContent = 'GAME OVER! PRESS RESET.';
-        setTimeout(showStats, 500);
-      }
+      startPos = { x: 150, y: 330 };
+      token.x = startPos.x; token.y = startPos.y;
+      token.vx = 0; token.vy = 0; token.inAir = false; token.scale = 1;
     }
 
     function updateDisplay() {
-      document.getElementById('meter-passes').textContent = passes.toString().padStart(2, '0');
-      document.getElementById('meter-misses').textContent = misses.toString().padStart(2, '0');
-      document.getElementById('meter-chances').textContent = chances.toString().padStart(2, '0');
+      document.getElementById('meter-youdrink').textContent = yourDrinks.toString().padStart(2, '0');
+      document.getElementById('meter-theydrink').textContent = theirDrinks.toString().padStart(2, '0');
+      document.getElementById('meter-turn').textContent = turn;
       document.getElementById('meter-score').textContent = score.toString().padStart(3, '0');
     }
 
     function resetGame() {
-      score = 0; chances = 10; passes = 0; misses = 0;
-      document.getElementById('status-msg').textContent = 'READY. SNAP / KICK TOKEN!';
-      closeStats(); updateDisplay(); initDefenders(); resetToken();
+      score = 0; yourDrinks = 0; theirDrinks = 0; turn = 'YOU';
+      document.getElementById('status-msg').textContent = 'YOUR TURN! AIM & FLIP THE TOKEN!';
+      closeStats(); updateDisplay(); initObstacles(); resetToken();
     }
 
     function showStats() {
       document.getElementById('stat-score').textContent = score;
-      document.getElementById('stat-passes').textContent = passes;
-      document.getElementById('stat-misses').textContent = misses;
-      let total = passes + misses;
-      document.getElementById('stat-rate').textContent = (total > 0 ? Math.round((passes / total) * 100) : 0) + '%';
+      document.getElementById('stat-theydrink').textContent = theirDrinks;
+      document.getElementById('stat-youdrink').textContent = yourDrinks;
       document.getElementById('statsModal').classList.add('active');
     }
 
     function closeStats() { document.getElementById('statsModal').classList.remove('active'); }
 
     function update() {
-      defenders.forEach(d => {
-        d.x += d.vx;
-        if (d.x < 15 || d.x + d.width > canvas.width - 15) d.vx *= -1;
+      obstacles.forEach(ob => {
+        ob.x += ob.vx;
+        if (ob.x < ob.radius + 10 || ob.x > canvas.width - ob.radius - 10) ob.vx *= -1;
       });
 
       if (token.inAir) {
         token.x += token.vx;
         token.y += token.vy;
-        token.vy += 0.2;
-        token.rotation += 0.15;
+        token.vy += 0.22;
+        token.rotation += 0.2;
+        token.scale = Math.max(0.6, token.scale - 0.003);
 
-        // Defender Collision
-        defenders.forEach(d => {
-          if (token.x > d.x && token.x < d.x + d.width && token.y > d.y && token.y < d.y + d.height) {
-            token.vy *= -0.75; token.vx *= 1.2;
-            playBeep(220, 'square', 0.04);
+        obstacles.forEach(ob => {
+          let dist = Math.hypot(token.x - ob.x, token.y - ob.y);
+          if (dist < token.radius + ob.radius) {
+            token.vy *= -0.8; token.vx *= 1.3;
+            playBeep(280, 'square', 0.04);
           }
         });
 
-        // Goalpost Check
-        if (token.y <= goalpost.crossbarY + 6 && token.y >= goalpost.y - 8) {
-          if (token.x >= goalpost.xMin + 4 && token.x <= goalpost.xMax - 4) {
-            recordResult(true); return;
+        // Hit MGM Gold Glass
+        if (token.y <= mgmShotGlass.y + mgmShotGlass.h && token.y >= mgmShotGlass.y) {
+          if (token.x >= mgmShotGlass.x && token.x <= mgmShotGlass.x + mgmShotGlass.w) {
+            recordResult('MGM'); return;
           }
         }
+
+        // Hit Side Glasses
+        sideGlasses.forEach(g => {
+          if (token.y <= g.y + g.h && token.y >= g.y) {
+            if (token.x >= g.x && token.x <= g.x + g.w) {
+              recordResult('GLASS'); return;
+            }
+          }
+        });
+
         if (token.y > canvas.height + 15 || token.y < 5 || token.x < 0 || token.x > canvas.width) {
-          recordResult(false);
+          recordResult('MISS');
         }
       }
     }
 
     function draw() {
-      // Vintage LED Green Grid Background
-      ctx.fillStyle = '#041407';
+      ctx.fillStyle = '#170a24';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Yard Line Hash Lines
-      ctx.strokeStyle = '#0f3818';
-      ctx.lineWidth = 1;
-      for (let y = 20; y < canvas.height; y += 20) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-      }
+      ctx.strokeStyle = '#ff00ff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, bounceLineY); ctx.lineTo(canvas.width, bounceLineY); ctx.stroke();
 
-      // Line of Scrimmage Boundary
-      ctx.strokeStyle = '#39ff14';
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(0, lineOfScrimmageY); ctx.lineTo(canvas.width, lineOfScrimmageY); ctx.stroke();
+      // MGM Gold Shot Glass
+      ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 3;
+      ctx.strokeRect(mgmShotGlass.x, mgmShotGlass.y, mgmShotGlass.w, mgmShotGlass.h);
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.25)';
+      ctx.fillRect(mgmShotGlass.x, mgmShotGlass.y, mgmShotGlass.w, mgmShotGlass.h);
+      ctx.fillStyle = '#ffd700'; ctx.font = '9px monospace';
+      ctx.fillText('MGM', mgmShotGlass.x + 10, mgmShotGlass.y + 20);
 
-      // Yellow LED Goalpost
-      ctx.strokeStyle = '#ffea00'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(goalpost.xMin, goalpost.y); ctx.lineTo(goalpost.xMin, goalpost.crossbarY);
-      ctx.lineTo(goalpost.xMax, goalpost.crossbarY); ctx.lineTo(goalpost.xMax, goalpost.y);
-      ctx.moveTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY);
-      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 15);
-      ctx.stroke();
-
-      // Draw 7 Red LED Defender Dashes
-      ctx.fillStyle = '#ff2222';
-      defenders.forEach(d => {
-        ctx.fillRect(d.x, d.y, d.width, d.height);
+      // Red Cups (\_/)
+      sideGlasses.forEach(g => {
+        ctx.strokeStyle = '#ff0055'; ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(g.x, g.y);
+        ctx.lineTo(g.x + 5, g.y + g.h);
+        ctx.lineTo(g.x + g.w - 5, g.y + g.h);
+        ctx.lineTo(g.x + g.w, g.y);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255, 0, 85, 0.2)';
+        ctx.fill();
       });
 
-      // Draw Quarterback LED Marker
+      // Bouncers
+      obstacles.forEach(ob => {
+        ctx.beginPath(); ctx.arc(ob.x, ob.y, ob.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#39ff14'; ctx.fill();
+      });
+
       if (!token.inAir) {
-        ctx.fillStyle = '#39ff14';
-        ctx.fillRect(qbPos.x - 6, qbPos.y - 4, 12, 8);
+        ctx.strokeStyle = turn === 'YOU' ? '#ff00ff' : '#00f0ff';
+        ctx.beginPath(); ctx.arc(startPos.x, startPos.y, 12, 0, Math.PI * 2); ctx.stroke();
       }
 
-      // Draw Flying MGM Token
+      // Coin Token
       ctx.save();
       ctx.translate(token.x, token.y);
+      ctx.scale(token.scale, token.scale);
       ctx.rotate(token.rotation);
       if (mgmCoinImg.complete && mgmCoinImg.naturalWidth > 0) {
         ctx.drawImage(mgmCoinImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
       } else {
         ctx.beginPath(); ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffea00'; ctx.fill();
+        ctx.fillStyle = '#ffd700'; ctx.fill();
       }
       ctx.restore();
     }
