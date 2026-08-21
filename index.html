@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarterback Maxx: Midway Token Toss</title>
+  <title>Quarterback Maxx: MGM Token Flip</title>
   <style>
     * {
       box-sizing: border-box;
@@ -24,37 +24,40 @@
     }
     header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     h1 {
-      font-size: 2rem;
+      font-size: 2.2rem;
       color: #00f0ff;
       text-shadow: 0 0 10px #00f0ff, 0 0 20px #ff007f;
+      letter-spacing: 1px;
     }
     .hud {
       display: flex;
-      gap: 30px;
-      font-size: 1.2rem;
+      gap: 25px;
+      font-size: 1.1rem;
       font-weight: bold;
       color: #ff007f;
       text-shadow: 0 0 8px #ff007f;
+      justify-content: center;
+      margin-top: 5px;
     }
     .game-container {
       position: relative;
       display: flex;
       align-items: flex-end;
       gap: 20px;
-      background: rgba(20, 10, 35, 0.8);
+      background: rgba(20, 10, 35, 0.85);
       padding: 20px;
       border-radius: 16px;
       border: 2px solid #00f0ff;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
     }
-    /* Quarterback Maxx Character Frame */
+    /* Character Host Side Stage */
     .character-stage {
       position: relative;
       width: 220px;
-      height: 380px;
+      height: 400px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -65,7 +68,7 @@
       height: auto;
       object-fit: contain;
       filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.5));
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease;
     }
     .dialogue-box {
       position: absolute;
@@ -75,7 +78,7 @@
       color: #00f0ff;
       padding: 8px 12px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-align: center;
       box-shadow: 0 0 10px #ff007f;
       width: 100%;
@@ -85,79 +88,213 @@
       background: radial-gradient(circle at center, #231138 0%, #0a0312 100%);
       border: 2px solid #ff007f;
       border-radius: 12px;
-      cursor: crosshair;
+      cursor: grab;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    /* Controls Area */
+    .controls-bar {
+      margin-top: 15px;
+      display: flex;
+      gap: 15px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #ff007f, #7928ca);
+      color: #fff;
+      border: 2px solid #00f0ff;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      text-shadow: 0 0 5px #00f0ff;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+    }
+    /* Modal Stats Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 999;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal {
+      background: #120024;
+      border: 3px solid #00f0ff;
+      box-shadow: 0 0 35px #ff007f;
+      border-radius: 16px;
+      padding: 25px 35px;
+      width: 380px;
+      text-align: center;
+    }
+    .modal h2 {
+      color: #ff007f;
+      text-shadow: 0 0 10px #ff007f;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 1.1rem;
+      border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+      padding-bottom: 5px;
+    }
+    .stat-value {
+      color: #00f0ff;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>QUARTERBACK MAXX: MIDWAY TOKEN TOSS</h1>
+    <h1>QUARTERBACK MAXX: MGM TOKEN FLIP</h1>
     <div class="hud">
       <div>SCORE: <span id="score">0</span></div>
-      <div>TOKENS: <span id="tokens">10</span></div>
+      <div>FLIPS: <span id="flips">10</span></div>
+      <div>ACCURACY: <span id="accuracy">0%</span></div>
     </div>
   </header>
 
   <div class="game-container">
     <!-- Character Host Side Stage -->
     <div class="character-stage">
-      <div class="dialogue-box" id="dialogue">"Drag back & flip that token, High Roller!"</div>
-      <img id="maxx-img" src="qbflipp.jpg" alt="Quarterback Maxx">
+      <div class="dialogue-box" id="dialogue">"Pull back on the MGM Token & launch!"</div>
+      <img id="maxx-img" src="quarterbackmaxxmgmtoken.png" alt="Quarterback Maxx">
     </div>
 
     <!-- Interactive Game Canvas -->
     <canvas id="gameCanvas" width="600" height="400"></canvas>
   </div>
 
+  <div class="controls-bar">
+    <button class="btn" onclick="resetGame()">RESET GAME</button>
+    <button class="btn" onclick="showStats()">VIEW STATS</button>
+  </div>
+
+  <!-- Stats Modal -->
+  <div class="modal-overlay" id="statsModal">
+    <div class="modal">
+      <h2>DRIVE STATS</h2>
+      <div class="stat-row"><span>Final Score:</span><span class="stat-value" id="stat-score">0</span></div>
+      <div class="stat-row"><span>Flips Used:</span><span class="stat-value" id="stat-flips">0</span></div>
+      <div class="stat-row"><span>Touchdowns / Hits:</span><span class="stat-value" id="stat-hits">0</span></div>
+      <div class="stat-row"><span>Target Accuracy:</span><span class="stat-value" id="stat-acc">0%</span></div>
+      <br>
+      <button class="btn" onclick="closeStats()">PLAY AGAIN</button>
+    </div>
+  </div>
+
   <script>
+    // Audio Synthesizer (Classic 1970s Handheld LED Sound Engine)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playBeep(freq, type, duration) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type || 'square';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playFlickSound() {
+      playBeep(300, 'square', 0.08);
+      setTimeout(() => playBeep(600, 'triangle', 0.1), 40);
+    }
+
+    function playTouchdownSound() {
+      // Classic vintage victory fanfare
+      const notes = [523, 659, 783, 1046, 783, 1046];
+      const times = [0, 100, 200, 300, 450, 600];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playBeep(freq, 'square', 0.18), times[idx]);
+      });
+    }
+
+    function playGameOverSound() {
+      const notes = [400, 350, 300, 250];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playBeep(freq, 'sawtooth', 0.2), idx * 120);
+      });
+    }
+
+    // Canvas & Game State Setup
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score');
-    const tokensEl = document.getElementById('tokens');
-    const dialogueEl = document.getElementById('dialogue');
-    const maxxImg = document.getElementById('maxx-img');
 
     let score = 0;
-    let tokens = 10;
+    let flips = 10;
+    let totalAttempts = 0;
+    let hits = 0;
     let isAiming = false;
     let dragStart = { x: 0, y: 0 };
     let dragCurrent = { x: 0, y: 0 };
 
-    // Token Physics Object
+    // MGM Token Sprite / Object
+    const mgmTokenImg = new Image();
+    mgmTokenImg.src = 'quarterbackmaxxmgmtoken.png';
+
     let token = {
-      x: 100,
-      y: 320,
-      radius: 14,
+      x: 90,
+      y: 310,
+      radius: 18,
       vx: 0,
       vy: 0,
       inAir: false,
+      rotation: 0,
+      flipSpeed: 0,
       scale: 1
     };
 
-    // Fairground Targets
+    // Moving Fairground Targets
     const targets = [
-      { x: 380, y: 120, radius: 40, points: 100, color: '#00f0ff', vx: 1.5 },
-      { x: 480, y: 220, radius: 30, points: 250, color: '#ff007f', vx: -2.0 },
-      { x: 400, y: 310, radius: 22, points: 500, color: '#ffd700', vx: 2.5 }
+      { x: 380, y: 110, radius: 38, points: 100, color: '#00f0ff', vx: 1.5 },
+      { x: 480, y: 210, radius: 28, points: 250, color: '#ff007f', vx: -2.0 },
+      { x: 410, y: 310, radius: 20, points: 500, color: '#ffd700', vx: 2.8 }
     ];
 
-    // Mouse & Touch Controls
+    // Mouse / Touch Drag Input
     canvas.addEventListener('mousedown', startDrag);
     canvas.addEventListener('mousemove', drag);
     canvas.addEventListener('mouseup', releaseDrag);
 
     function startDrag(e) {
-      if (token.inAir || tokens <= 0) return;
+      if (token.inAir || flips <= 0) return;
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
-      // Check click near token spawn
-      if (Math.hypot(mouseX - token.x, mouseY - token.y) < 30) {
+      if (Math.hypot(mouseX - token.x, mouseY - token.y) < 40) {
         isAiming = true;
         dragStart = { x: token.x, y: token.y };
         dragCurrent = { x: mouseX, y: mouseY };
+        playBeep(220, 'square', 0.05);
       }
     }
 
@@ -171,67 +308,107 @@
       if (!isAiming) return;
       isAiming = false;
 
-      // Launch velocity based on drag vector
       const dx = dragStart.x - dragCurrent.x;
       const dy = dragStart.y - dragCurrent.y;
 
-      token.vx = dx * 0.12;
-      token.vy = dy * 0.12;
+      token.vx = dx * 0.13;
+      token.vy = dy * 0.13;
       token.inAir = true;
+      token.flipSpeed = Math.hypot(dx, dy) * 0.08;
 
-      tokens--;
-      tokensEl.textContent = tokens;
-      dialogueEl.textContent = '"Airborne! Spot the target!"';
+      flips--;
+      totalAttempts++;
+      document.getElementById('flips').textContent = flips;
+      document.getElementById('dialogue').textContent = '"Token in flight!"';
+
+      playFlickSound();
     }
 
     function resetToken() {
-      token.x = 100;
-      token.y = 320;
+      token.x = 90;
+      token.y = 310;
       token.vx = 0;
       token.vy = 0;
+      token.rotation = 0;
       token.scale = 1;
       token.inAir = false;
 
-      if (tokens <= 0) {
-        dialogueEl.textContent = '"Game Over! MaxxCo thanks you!"';
+      let acc = totalAttempts > 0 ? Math.round((hits / totalAttempts) * 100) : 0;
+      document.getElementById('accuracy').textContent = acc + '%';
+
+      if (flips <= 0) {
+        document.getElementById('dialogue').textContent = '"Drive Complete! Check your Stats!"';
+        playGameOverSound();
+        setTimeout(showStats, 800);
       }
     }
 
+    function resetGame() {
+      score = 0;
+      flips = 10;
+      totalAttempts = 0;
+      hits = 0;
+      document.getElementById('score').textContent = '0';
+      document.getElementById('flips').textContent = '10';
+      document.getElementById('accuracy').textContent = '0%';
+      document.getElementById('dialogue').textContent = '"Pull back on the MGM Token & launch!"';
+      closeStats();
+      resetToken();
+    }
+
+    function showStats() {
+      document.getElementById('stat-score').textContent = score;
+      document.getElementById('stat-flips').textContent = totalAttempts;
+      document.getElementById('stat-hits').textContent = hits;
+      let acc = totalAttempts > 0 ? Math.round((hits / totalAttempts) * 100) : 0;
+      document.getElementById('stat-acc').textContent = acc + '%';
+      document.getElementById('statsModal').classList.add('active');
+    }
+
+    function closeStats() {
+      document.getElementById('statsModal').classList.remove('active');
+    }
+
     function update() {
-      // Move targets
+      // Targets Movement
       targets.forEach(t => {
         t.x += t.vx;
-        if (t.x - t.radius < 280 || t.x + t.radius > canvas.width - 20) {
+        if (t.x - t.radius < 260 || t.x + t.radius > canvas.width - 20) {
           t.vx *= -1;
         }
       });
 
-      // Update flying token
+      // Flying MGM Token Physics & Flip Rotation
       if (token.inAir) {
         token.x += token.vx;
         token.y += token.vy;
-        token.vy += 0.25; // Simulated gravity
-        token.scale = Math.max(0.5, token.scale - 0.008); // Depth simulation
+        token.vy += 0.28; // Simulated gravity
+        token.rotation += token.flipSpeed;
+        token.scale = Math.max(0.4, token.scale - 0.009);
 
-        // Collision detection with targets
+        // Check Target Hit
         targets.forEach(t => {
           const dist = Math.hypot(token.x - t.x, token.y - t.y);
           if (dist < t.radius && token.scale < 0.85) {
             score += t.points;
-            scoreEl.textContent = score;
-            dialogueEl.textContent = `\"TOUCHDOWN! +${t.points} PTS!\"`;
-            
-            // Bounce animation on character
-            maxxImg.style.transform = 'scale(1.08)';
-            setTimeout(() => maxxImg.style.transform = 'scale(1)', 150);
+            hits++;
+            document.getElementById('score').textContent = score;
+            document.getElementById('dialogue').textContent = `\"TOUCHDOWN! +${t.points} PTS!\"`;
 
+            // Mascot Bounce Animation
+            const img = document.getElementById('maxx-img');
+            img.style.transform = 'scale(1.1)';
+            setTimeout(() => img.style.transform = 'scale(1)', 180);
+
+            playTouchdownSound();
             resetToken();
           }
         });
 
-        // Out of bounds / Miss
-        if (token.y > canvas.height + 20 || token.x > canvas.width + 20) {
-          dialogueEl.textContent = '"Missed! Adjust your aim!"';
+        // Out of Bounds Miss
+        if (token.y > canvas.height + 30 || token.x > canvas.width + 30) {
+          document.getElementById('dialogue').textContent = '"Incomplete! Adjust your pull strength!"';
+          playBeep(120, 'sawtooth', 0.15);
           resetToken();
         }
       }
@@ -240,23 +417,34 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw Slingshot / Trajectory Line
+      // Trajectory Line & Pull Power Meter
       if (isAiming) {
+        const dx = dragStart.x - dragCurrent.x;
+        const dy = dragStart.y - dragCurrent.y;
+        const pullDist = Math.hypot(dx, dy);
+
+        // Trajectory Dots
         ctx.beginPath();
         ctx.moveTo(token.x, token.y);
-        ctx.lineTo(dragCurrent.x, dragCurrent.y);
+        ctx.lineTo(token.x + dx * 1.5, token.y + dy * 1.5);
         ctx.strokeStyle = '#ff007f';
         ctx.lineWidth = 3;
-        ctx.setLineDash([5, 5]);
+        ctx.setLineDash([6, 6]);
         ctx.stroke();
         ctx.setLineDash([]);
+
+        // Pull Intensity Bar Indicator
+        const maxPull = 150;
+        const intensity = Math.min(1, pullDist / maxPull);
+        ctx.fillStyle = `rgb(${Math.floor(intensity * 255)}, ${Math.floor((1 - intensity) * 255)}, 255)`;
+        ctx.fillRect(token.x - 25, token.y + 30, Math.min(pullDist, 50), 6);
       }
 
-      // Draw Targets
+      // Draw Fairground Targets
       targets.forEach(t => {
         ctx.beginPath();
         ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(20, 10, 35, 0.6)';
+        ctx.fillStyle = 'rgba(20, 10, 35, 0.7)';
         ctx.fill();
         ctx.lineWidth = 4;
         ctx.strokeStyle = t.color;
@@ -268,24 +456,23 @@
         ctx.fillText(`${t.points}`, t.x, t.y + 4);
       });
 
-      // Draw MGM Token
+      // Draw Rotating MGM Token
       ctx.save();
       ctx.translate(token.x, token.y);
-      ctx.scale(token.scale, token.scale);
+      ctx.scale(token.scale, token.scale * Math.cos(token.rotation)); // Realistic 3D flip animation
 
-      ctx.beginPath();
-      ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffd700';
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#ff007f';
-      ctx.stroke();
-
-      // Token Center Emblem
-      ctx.fillStyle = '#0d0614';
-      ctx.beginPath();
-      ctx.arc(0, 0, 7, 0, Math.PI * 2);
-      ctx.fill();
+      if (mgmTokenImg.complete && mgmTokenImg.naturalWidth > 0) {
+        ctx.drawImage(mgmTokenImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
+      } else {
+        // Fallback Render
+        ctx.beginPath();
+        ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffd700';
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#ff007f';
+        ctx.stroke();
+      }
       ctx.restore();
     }
 
