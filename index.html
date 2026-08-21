@@ -1,1 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quarterback Maxx: Midway Token Toss</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background: #0d0614;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #00f0ff, 0 0 20px #ff007f;
+    }
+    .hud {
+      display: flex;
+      gap: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff007f;
+      text-shadow: 0 0 8px #ff007f;
+    }
+    .game-container {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      background: rgba(20, 10, 35, 0.8);
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+    /* Quarterback Maxx Character Frame */
+    .character-stage {
+      position: relative;
+      width: 220px;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .character-stage img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.5));
+      transition: transform 0.1s ease;
+    }
+    .dialogue-box {
+      position: absolute;
+      top: 0;
+      background: #120024;
+      border: 2px solid #ff007f;
+      color: #00f0ff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: center;
+      box-shadow: 0 0 10px #ff007f;
+      width: 100%;
+    }
+    /* Canvas Area */
+    canvas {
+      background: radial-gradient(circle at center, #231138 0%, #0a0312 100%);
+      border: 2px solid #ff007f;
+      border-radius: 12px;
+      cursor: crosshair;
+    }
+  </style>
+</head>
+<body>
 
+  <header>
+    <h1>QUARTERBACK MAXX: MIDWAY TOKEN TOSS</h1>
+    <div class="hud">
+      <div>SCORE: <span id="score">0</span></div>
+      <div>TOKENS: <span id="tokens">10</span></div>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <!-- Character Host Side Stage -->
+    <div class="character-stage">
+      <div class="dialogue-box" id="dialogue">"Drag back & flip that token, High Roller!"</div>
+      <img id="maxx-img" src="qbflipp.jpg" alt="Quarterback Maxx">
+    </div>
+
+    <!-- Interactive Game Canvas -->
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const tokensEl = document.getElementById('tokens');
+    const dialogueEl = document.getElementById('dialogue');
+    const maxxImg = document.getElementById('maxx-img');
+
+    let score = 0;
+    let tokens = 10;
+    let isAiming = false;
+    let dragStart = { x: 0, y: 0 };
+    let dragCurrent = { x: 0, y: 0 };
+
+    // Token Physics Object
+    let token = {
+      x: 100,
+      y: 320,
+      radius: 14,
+      vx: 0,
+      vy: 0,
+      inAir: false,
+      scale: 1
+    };
+
+    // Fairground Targets
+    const targets = [
+      { x: 380, y: 120, radius: 40, points: 100, color: '#00f0ff', vx: 1.5 },
+      { x: 480, y: 220, radius: 30, points: 250, color: '#ff007f', vx: -2.0 },
+      { x: 400, y: 310, radius: 22, points: 500, color: '#ffd700', vx: 2.5 }
+    ];
+
+    // Mouse & Touch Controls
+    canvas.addEventListener('mousedown', startDrag);
+    canvas.addEventListener('mousemove', drag);
+    canvas.addEventListener('mouseup', releaseDrag);
+
+    function startDrag(e) {
+      if (token.inAir || tokens <= 0) return;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      // Check click near token spawn
+      if (Math.hypot(mouseX - token.x, mouseY - token.y) < 30) {
+        isAiming = true;
+        dragStart = { x: token.x, y: token.y };
+        dragCurrent = { x: mouseX, y: mouseY };
+      }
+    }
+
+    function drag(e) {
+      if (!isAiming) return;
+      const rect = canvas.getBoundingClientRect();
+      dragCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function releaseDrag() {
+      if (!isAiming) return;
+      isAiming = false;
+
+      // Launch velocity based on drag vector
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+
+      token.vx = dx * 0.12;
+      token.vy = dy * 0.12;
+      token.inAir = true;
+
+      tokens--;
+      tokensEl.textContent = tokens;
+      dialogueEl.textContent = '"Airborne! Spot the target!"';
+    }
+
+    function resetToken() {
+      token.x = 100;
+      token.y = 320;
+      token.vx = 0;
+      token.vy = 0;
+      token.scale = 1;
+      token.inAir = false;
+
+      if (tokens <= 0) {
+        dialogueEl.textContent = '"Game Over! MaxxCo thanks you!"';
+      }
+    }
+
+    function update() {
+      // Move targets
+      targets.forEach(t => {
+        t.x += t.vx;
+        if (t.x - t.radius < 280 || t.x + t.radius > canvas.width - 20) {
+          t.vx *= -1;
+        }
+      });
+
+      // Update flying token
+      if (token.inAir) {
+        token.x += token.vx;
+        token.y += token.vy;
+        token.vy += 0.25; // Simulated gravity
+        token.scale = Math.max(0.5, token.scale - 0.008); // Depth simulation
+
+        // Collision detection with targets
+        targets.forEach(t => {
+          const dist = Math.hypot(token.x - t.x, token.y - t.y);
+          if (dist < t.radius && token.scale < 0.85) {
+            score += t.points;
+            scoreEl.textContent = score;
+            dialogueEl.textContent = `\"TOUCHDOWN! +${t.points} PTS!\"`;
+            
+            // Bounce animation on character
+            maxxImg.style.transform = 'scale(1.08)';
+            setTimeout(() => maxxImg.style.transform = 'scale(1)', 150);
+
+            resetToken();
+          }
+        });
+
+        // Out of bounds / Miss
+        if (token.y > canvas.height + 20 || token.x > canvas.width + 20) {
+          dialogueEl.textContent = '"Missed! Adjust your aim!"';
+          resetToken();
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Slingshot / Trajectory Line
+      if (isAiming) {
+        ctx.beginPath();
+        ctx.moveTo(token.x, token.y);
+        ctx.lineTo(dragCurrent.x, dragCurrent.y);
+        ctx.strokeStyle = '#ff007f';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Draw Targets
+      targets.forEach(t => {
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(20, 10, 35, 0.6)';
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = t.color;
+        ctx.stroke();
+
+        ctx.fillStyle = t.color;
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${t.points}`, t.x, t.y + 4);
+      });
+
+      // Draw MGM Token
+      ctx.save();
+      ctx.translate(token.x, token.y);
+      ctx.scale(token.scale, token.scale);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd700';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#ff007f';
+      ctx.stroke();
+
+      // Token Center Emblem
+      ctx.fillStyle = '#0d0614';
+      ctx.beginPath();
+      ctx.arc(0, 0, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
