@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Quarterback Maxx: Handheld Field Goal Blitz</title>
+  <title>Quarterback Maxx: Electronic Handheld</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,300 +14,305 @@
       touch-action: manipulation;
     }
     body {
-      background: #0b0512;
+      background: #05020a;
       color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Courier New', Courier, monospace;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       min-height: 100vh;
       padding: 10px;
       overflow-x: hidden;
     }
-    header {
-      text-align: center;
-      margin-bottom: 6px;
+
+    /* Outer Handheld Console Plastic Shell */
+    .handheld-console {
       width: 100%;
-      max-width: 480px;
-    }
-    h1 {
-      font-size: 1.2rem;
-      color: #00f0ff;
-      text-shadow: 0 0 8px #00f0ff, 0 0 15px #ff007f;
-      letter-spacing: 0.5px;
-    }
-    .hud {
-      display: flex;
-      justify-content: space-around;
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: #ff007f;
-      text-shadow: 0 0 6px #ff007f;
-      margin-top: 2px;
-    }
-    .game-container {
-      position: relative;
+      max-width: 380px;
+      background: linear-gradient(180deg, #d8ccb0 0%, #b5a482 100%);
+      border: 4px solid #544733;
+      border-radius: 24px;
+      padding: 16px 14px 20px 14px;
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.6), 0 10px 25px rgba(0,0,0,0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 100%;
-      max-width: 480px;
-      background: rgba(18, 8, 30, 0.95);
-      padding: 10px;
-      border-radius: 12px;
-      border: 2px solid #00f0ff;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
     }
-    /* Side/Top Stage Panel */
-    .character-stage {
-      display: flex;
+
+    /* Handheld Header Branding */
+    .brand-plate {
       width: 100%;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .meters-panel {
-      flex: 1;
-      background: #120024;
-      border: 1px solid #00f0ff;
+      background: #1a0808;
+      border: 2px solid #8b0000;
       border-radius: 6px;
-      padding: 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      padding: 6px;
+      text-align: center;
+      margin-bottom: 12px;
+      box-shadow: inset 0 0 8px #000;
     }
-    .meter-box {
-      background: #000;
-      border: 1px solid #ff007f;
-      border-radius: 3px;
+    .brand-title {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #ff3333;
+      letter-spacing: 2px;
+      text-shadow: 0 0 6px #ff0000;
+    }
+    .brand-sub {
+      font-size: 0.65rem;
+      color: #ffd700;
+      letter-spacing: 1px;
+    }
+
+    /* Top Stats & Meters Bezel */
+    .meters-bezel {
+      width: 100%;
+      background: #111;
+      border: 2px solid #333;
+      border-radius: 6px;
+      padding: 6px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .led-meter {
+      background: #050000;
+      border: 1px solid #440000;
       padding: 2px 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: monospace;
-      font-size: 0.75rem;
-    }
-    .meter-title { color: #00f0ff; }
-    .meter-val {
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: #39ff14;
-      text-shadow: 0 0 4px #39ff14;
-    }
-    .meter-val.miss {
-      color: #ff0055;
-      text-shadow: 0 0 4px #ff0055;
-    }
-    .character-stage img {
-      width: 75px;
-      height: 75px;
-      object-fit: contain;
-      filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.5));
-    }
-    .dialogue-box {
-      font-size: 0.75rem;
-      background: #120024;
-      border: 1px solid #ff007f;
-      color: #00f0ff;
-      padding: 4px 6px;
-      border-radius: 6px;
+      border-radius: 4px;
       text-align: center;
-      width: 100%;
-      margin-bottom: 6px;
     }
-    /* Responsive Canvas Container */
-    .canvas-wrapper {
-      position: relative;
+    .led-label {
+      font-size: 0.6rem;
+      color: #888;
+      display: block;
+    }
+    .led-num {
+      font-size: 1.1rem;
+      color: #ff2222;
+      text-shadow: 0 0 6px #ff0000;
+      font-weight: bold;
+    }
+
+    /* Screen Housing Frame */
+    .screen-housing {
       width: 100%;
-      max-width: 440px;
-      aspect-ratio: 11 / 10;
+      background: #020f04;
+      border: 4px solid #1c2e1f;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: inset 0 0 15px #000;
+      position: relative;
     }
     canvas {
       width: 100%;
-      height: 100%;
-      border: 2px solid #ff007f;
-      border-radius: 8px;
-      touch-action: none;
+      height: auto;
+      aspect-ratio: 3 / 4;
+      display: block;
+      background: #041407;
+      border-radius: 4px;
     }
-    /* Mobile Retro Touch Controls */
-    .mobile-controls {
-      display: flex;
+
+    /* Dialogue Text Display */
+    .status-readout {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: #39ff14;
+      text-shadow: 0 0 4px #39ff14;
+      text-align: center;
+      height: 16px;
+    }
+
+    /* Console Control Panel (Built onto Casing) */
+    .control-panel {
       width: 100%;
-      max-width: 440px;
+      margin-top: 14px;
+      display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
-      gap: 10px;
+      padding: 0 8px;
     }
-    .dpad {
+
+    /* Cross D-Pad */
+    .dpad-container {
       display: grid;
-      grid-template-columns: repeat(3, 38px);
-      grid-template-rows: repeat(2, 38px);
-      gap: 4px;
+      grid-template-columns: repeat(3, 36px);
+      grid-template-rows: repeat(3, 36px);
+      gap: 2px;
     }
-    .pad-btn {
-      background: #120024;
-      border: 1.5px solid #00f0ff;
-      color: #00f0ff;
+    .dpad-btn {
+      background: #333;
+      border: 1px solid #111;
+      color: #aaa;
+      font-size: 0.9rem;
       font-weight: bold;
-      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
-      box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
-    }
-    .pad-btn:active {
-      background: #ff007f;
-      color: #fff;
-    }
-    .action-btn {
-      flex: 1;
-      height: 80px;
-      background: linear-gradient(135deg, #ff007f, #7928ca);
-      color: #fff;
-      border: 2px solid #00f0ff;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 12px;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.3), 0 3px 0 #111;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
-      text-shadow: 0 0 5px #00f0ff;
     }
-    .action-btn:active {
-      transform: scale(0.96);
+    .dpad-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #111;
+      background: #222;
+      color: #ff3333;
     }
-    /* Controls Bar */
-    .controls-bar {
-      margin-top: 10px;
+
+    /* Big Action Button */
+    .action-group {
       display: flex;
-      gap: 10px;
-      width: 100%;
-      max-width: 480px;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
     }
-    .btn {
-      flex: 1;
-      background: #120024;
+    .big-kick-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ff4444, #990000);
+      border: 3px solid #550000;
       color: #fff;
-      border: 1px solid #00f0ff;
-      padding: 8px;
-      font-size: 0.85rem;
       font-weight: bold;
-      border-radius: 6px;
-      text-align: center;
+      font-size: 0.85rem;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 5px 0 #330000;
+      cursor: pointer;
     }
-    /* Modal Stats Popup */
+    .big-kick-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #330000;
+    }
+    .btn-label {
+      font-size: 0.65rem;
+      color: #443b2d;
+      font-weight: bold;
+    }
+
+    /* Auxiliary Reset / Stats Buttons */
+    .aux-bar {
+      margin-top: 14px;
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+    .aux-btn {
+      flex: 1;
+      background: #665b49;
+      color: #eeddcc;
+      border: 1px solid #332d24;
+      padding: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      border-radius: 4px;
+      box-shadow: 0 2px 0 #221e18;
+      cursor: pointer;
+    }
+    .aux-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 #221e18;
+    }
+
+    /* Stats Modal */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.88);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      z-index: 999;
-      padding: 15px;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+      z-index: 99;
     }
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal {
-      background: #120024;
-      border: 2px solid #00f0ff;
-      box-shadow: 0 0 25px #ff007f;
-      border-radius: 12px;
-      padding: 20px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
+      background: #111;
+      border: 2px solid #ff3333;
+      border-radius: 8px;
+      padding: 16px; width: 280px; text-align: center;
     }
-    .modal h2 {
-      color: #ff007f;
-      text-shadow: 0 0 8px #ff007f;
-      margin-bottom: 12px;
-      font-size: 1.4rem;
-    }
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      font-size: 0.95rem;
-      border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
-      padding-bottom: 4px;
-    }
-    .stat-value { color: #00f0ff; font-weight: bold; }
+    .modal h2 { color: #ff3333; font-size: 1.2rem; margin-bottom: 10px; }
+    .stat-row { display: flex; justify-content: space-between; margin: 6px 0; font-size: 0.85rem; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>QUARTERBACK MAXX: FIELD GOAL BLITZ</h1>
-    <div class="hud">
-      <div>SCORE: <span id="score">0</span></div>
-      <div>CHANCES: <span id="chances">10</span></div>
+  <!-- Physical Handheld Console Casing -->
+  <div class="handheld-console">
+    
+    <div class="brand-plate">
+      <div class="brand-title">ELECTRONIC QUARTERBACK</div>
+      <div class="brand-sub">MAXXCO HANDHELD LED SYSTEM</div>
     </div>
-  </header>
 
-  <div class="game-container">
-    <div class="dialogue-box" id="dialogue">Position player & tap SNAP / KICK!</div>
-
-    <div class="character-stage">
-      <div class="meters-panel">
-        <div class="meter-box">
-          <span class="meter-title">PASSES:</span>
-          <span class="meter-val" id="meter-passes">0</span>
-        </div>
-        <div class="meter-box">
-          <span class="meter-title">MISSES:</span>
-          <span class="meter-val miss" id="meter-misses">0</span>
-        </div>
+    <!-- LED Meters Display Panel -->
+    <div class="meters-bezel">
+      <div class="led-meter">
+        <span class="led-label">PASSES</span>
+        <span class="led-num" id="meter-passes">00</span>
       </div>
-      <img id="maxx-img" src="quarterbackmaxxmgmtoken.png" alt="Quarterback Maxx">
-    </div>
-
-    <div class="canvas-wrapper">
-      <canvas id="gameCanvas" width="440" height="400"></canvas>
-    </div>
-
-    <!-- On-Screen Controls for Mobile Phones -->
-    <div class="mobile-controls">
-      <div class="dpad">
-        <div></div>
-        <button class="pad-btn" onclick="movePlayer(0, -15)">▲</button>
-        <div></div>
-        <button class="pad-btn" onclick="movePlayer(-15, 0)">◄</button>
-        <button class="pad-btn" onclick="movePlayer(0, 15)">▼</button>
-        <button class="pad-btn" onclick="movePlayer(15, 0)">►</button>
+      <div class="led-meter">
+        <span class="led-label">MISSES</span>
+        <span class="led-num" id="meter-misses">00</span>
       </div>
-      <button class="action-btn" onclick="triggerAction()">KICK / SNAP</button>
+      <div class="led-meter">
+        <span class="led-label">CHANCES</span>
+        <span class="led-num" id="meter-chances">10</span>
+      </div>
+      <div class="led-meter">
+        <span class="led-label">SCORE</span>
+        <span class="led-num" id="meter-score">000</span>
+      </div>
+    </div>
+
+    <!-- Green LED Screen Area -->
+    <div class="screen-housing">
+      <canvas id="gameCanvas" width="300" height="380"></canvas>
+      <div class="status-readout" id="status-msg">READY. SNAP / KICK TOKEN!</div>
+    </div>
+
+    <!-- Controls Built On The Plastic Body -->
+    <div class="control-panel">
+      <!-- Cross Directional Pad -->
+      <div class="dpad-container">
+        <div></div>
+        <button class="dpad-btn" onclick="moveQB(0, -12)">▲</button>
+        <div></div>
+        <button class="dpad-btn" onclick="moveQB(-12, 0)">◄</button>
+        <div></div>
+        <button class="dpad-btn" onclick="moveQB(12, 0)">►</button>
+        <div></div>
+        <button class="dpad-btn" onclick="moveQB(0, 12)">▼</button>
+        <div></div>
+      </div>
+
+      <!-- Action Kick Button -->
+      <div class="action-group">
+        <button class="big-kick-btn" onclick="snapOrKick()">KICK</button>
+        <span class="btn-label">SNAP / KICK</span>
+      </div>
+    </div>
+
+    <!-- Console Auxiliary Buttons -->
+    <div class="aux-bar">
+      <button class="aux-btn" onclick="resetGame()">RESET GAME</button>
+      <button class="aux-btn" onclick="showStats()">STATS</button>
     </div>
   </div>
 
-  <div class="controls-bar">
-    <button class="btn" onclick="resetGame()">RESET DRIVE</button>
-    <button class="btn" onclick="showStats()">STATS</button>
-  </div>
-
+  <!-- Stats Overlay Modal -->
   <div class="modal-overlay" id="statsModal">
     <div class="modal">
       <h2>DRIVE STATS</h2>
-      <div class="stat-row"><span>Final Score:</span><span class="stat-value" id="stat-score">0</span></div>
-      <div class="stat-row"><span>Passes / Goals:</span><span class="stat-value" id="stat-passes">0</span></div>
-      <div class="stat-row"><span>Missed Passes:</span><span class="stat-value" id="stat-misses">0</span></div>
-      <div class="stat-row"><span>Completion:</span><span class="stat-value" id="stat-rate">0%</span></div>
+      <div class="stat-row"><span>SCORE:</span><span id="stat-score">0</span></div>
+      <div class="stat-row"><span>PASSES:</span><span id="stat-passes">0</span></div>
+      <div class="stat-row"><span>MISSES:</span><span id="stat-misses">0</span></div>
+      <div class="stat-row"><span>RATE:</span><span id="stat-rate">0%</span></div>
       <br>
-      <button class="btn" onclick="closeStats()">NEW DRIVE</button>
+      <button class="aux-btn" onclick="closeStats()">CONTINUE</button>
     </div>
   </div>
 
   <script>
-    // Sound Engine (Retro LED Handheld Beeps)
+    // Audio Synthesizer for LED Handheld Sounds
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(freq, type, duration) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -315,7 +320,7 @@
       const gain = audioCtx.createGain();
       osc.type = type || 'square';
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.start(); osc.stop(audioCtx.currentTime + duration);
@@ -324,130 +329,88 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const lineOfScrimmageY = 300;
+    const lineOfScrimmageY = 280;
     let score = 0, chances = 10, passes = 0, misses = 0;
-    let isAiming = false;
 
     const mgmCoinImg = new Image();
     mgmCoinImg.src = 'tranparent mgm coin1.jpg';
 
-    let token = { x: 220, y: 350, radius: 14, vx: 0, vy: 0, inAir: false, scale: 1, rotation: 0 };
-    let playerPos = { x: 220, y: 350 };
-    let dragStart = { x: 0, y: 0 }, dragCurrent = { x: 0, y: 0 };
+    let token = { x: 150, y: 320, radius: 10, vx: 0, vy: 0, inAir: false, rotation: 0 };
+    let qbPos = { x: 150, y: 320 };
 
-    const goalpost = { xMin: 160, xMax: 280, y: 40, crossbarY: 58 };
+    const goalpost = { xMin: 110, xMax: 190, y: 35, crossbarY: 50 };
 
+    // 7 Red LED Defender Dashes
     const defenders = [];
     function initDefenders() {
       defenders.length = 0;
-      const yPositions = [90, 130, 170, 210, 240, 265, 285];
+      const yPos = [80, 115, 150, 185, 220, 245, 265];
       for (let i = 0; i < 7; i++) {
         defenders.push({
-          x: Math.random() * 300 + 40,
-          y: yPositions[i],
-          width: 32,
-          height: 14,
-          vx: (Math.random() > 0.5 ? 1 : -1) * (1.6 + Math.random() * 1.2),
-          color: i % 2 === 0 ? '#ff0055' : '#7928ca'
+          x: Math.random() * 200 + 30,
+          y: yPos[i],
+          width: 22,
+          height: 6,
+          vx: (Math.random() > 0.5 ? 1 : -1) * (1.2 + Math.random() * 1.0)
         });
       }
     }
     initDefenders();
 
-    function movePlayer(dx, dy) {
+    function moveQB(dx, dy) {
       if (token.inAir) return;
-      playerPos.x = Math.max(30, Math.min(canvas.width - 30, playerPos.x + dx));
-      playerPos.y = Math.max(lineOfScrimmageY, Math.min(canvas.height - 25, playerPos.y + dy));
-      token.x = playerPos.x;
-      token.y = playerPos.y;
-      playBeep(200, 'square', 0.03);
+      qbPos.x = Math.max(20, Math.min(canvas.width - 20, qbPos.x + dx));
+      qbPos.y = Math.max(lineOfScrimmageY, Math.min(canvas.height - 20, qbPos.y + dy));
+      token.x = qbPos.x;
+      token.y = qbPos.y;
+      playBeep(180, 'square', 0.03);
     }
 
-    function triggerAction() {
+    function snapOrKick() {
       if (token.inAir || chances <= 0) return;
-      token.vx = (Math.random() - 0.5) * 2;
-      token.vy = -7.5;
+      token.vx = (Math.random() - 0.5) * 1.5;
+      token.vy = -6.8;
       token.inAir = true;
       chances--;
-      document.getElementById('chances').textContent = chances;
-      document.getElementById('dialogue').textContent = '"KICK IS UP!"';
-      playBeep(320, 'square', 0.08);
+      updateDisplay();
+      document.getElementById('status-msg').textContent = 'TOKEN IN FLIGHT!';
+      playBeep(300, 'square', 0.08);
     }
 
-    // Touch Drag Controls directly on Canvas
-    canvas.addEventListener('touchstart', (e) => {
-      if (token.inAir || chances <= 0) return;
-      const rect = canvas.getBoundingClientRect();
-      const touch = e.touches[0];
-      const tx = (touch.clientX - rect.left) * (canvas.width / rect.width);
-      const ty = (touch.clientY - rect.top) * (canvas.height / rect.height);
-
-      if (ty >= lineOfScrimmageY) {
-        playerPos.x = tx; playerPos.y = ty;
-        token.x = tx; token.y = ty;
-        isAiming = true;
-        dragStart = { x: tx, y: ty };
-        dragCurrent = { x: tx, y: ty };
-      }
-    });
-
-    canvas.addEventListener('touchmove', (e) => {
-      if (!isAiming) return;
-      const rect = canvas.getBoundingClientRect();
-      const touch = e.touches[0];
-      dragCurrent = {
-        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
-        y: (touch.clientY - rect.top) * (canvas.height / rect.height)
-      };
-    });
-
-    canvas.addEventListener('touchend', () => {
-      if (!isAiming) return;
-      isAiming = false;
-      const dx = dragStart.x - dragCurrent.x;
-      const dy = dragStart.y - dragCurrent.y;
-      if (Math.hypot(dx, dy) > 10) {
-        token.vx = dx * 0.12;
-        token.vy = dy * 0.12;
-        token.inAir = true;
-        chances--;
-        document.getElementById('chances').textContent = chances;
-        document.getElementById('dialogue').textContent = '"TOKEN IN FLIGHT!"';
-        playBeep(350, 'square', 0.08);
-      }
-    });
-
-    function recordOutcome(success) {
+    function recordResult(success) {
       if (success) {
         score += 300; passes++;
-        document.getElementById('score').textContent = score;
-        document.getElementById('meter-passes').textContent = passes;
-        document.getElementById('dialogue').textContent = '"FIELD GOAL IS GOOD! +300"';
+        document.getElementById('status-msg').textContent = 'GOAL IS GOOD! +300';
         playBeep(523, 'square', 0.15);
       } else {
         misses++;
-        document.getElementById('meter-misses').textContent = misses;
-        document.getElementById('dialogue').textContent = '"NO GOOD! Pass missed!"';
-        playBeep(130, 'sawtooth', 0.15);
+        document.getElementById('status-msg').textContent = 'NO GOOD! MISSED!';
+        playBeep(120, 'sawtooth', 0.15);
       }
+      updateDisplay();
       resetToken();
     }
 
     function resetToken() {
-      token.x = playerPos.x;
-      token.y = playerPos.y;
-      token.vx = 0; token.vy = 0;
-      token.scale = 1; token.inAir = false;
-      if (chances <= 0) setTimeout(showStats, 600);
+      token.x = qbPos.x; token.y = qbPos.y;
+      token.vx = 0; token.vy = 0; token.inAir = false;
+      if (chances <= 0) {
+        document.getElementById('status-msg').textContent = 'GAME OVER! PRESS RESET.';
+        setTimeout(showStats, 500);
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById('meter-passes').textContent = passes.toString().padStart(2, '0');
+      document.getElementById('meter-misses').textContent = misses.toString().padStart(2, '0');
+      document.getElementById('meter-chances').textContent = chances.toString().padStart(2, '0');
+      document.getElementById('meter-score').textContent = score.toString().padStart(3, '0');
     }
 
     function resetGame() {
       score = 0; chances = 10; passes = 0; misses = 0;
-      document.getElementById('score').textContent = '0';
-      document.getElementById('chances').textContent = '10';
-      document.getElementById('meter-passes').textContent = '0';
-      document.getElementById('meter-misses').textContent = '0';
-      closeStats(); initDefenders(); resetToken();
+      document.getElementById('status-msg').textContent = 'READY. SNAP / KICK TOKEN!';
+      closeStats(); updateDisplay(); initDefenders(); resetToken();
     }
 
     function showStats() {
@@ -470,68 +433,76 @@
       if (token.inAir) {
         token.x += token.vx;
         token.y += token.vy;
-        token.vy += 0.22;
-        token.rotation += 0.2;
-        token.scale = Math.max(0.6, token.scale - 0.005);
+        token.vy += 0.2;
+        token.rotation += 0.15;
 
+        // Defender Collision
         defenders.forEach(d => {
           if (token.x > d.x && token.x < d.x + d.width && token.y > d.y && token.y < d.y + d.height) {
-            token.vy *= -0.8; token.vx *= 1.2;
+            token.vy *= -0.75; token.vx *= 1.2;
             playBeep(220, 'square', 0.04);
           }
         });
 
-        if (token.y <= goalpost.crossbarY + 8 && token.y >= goalpost.y - 10) {
+        // Goalpost Check
+        if (token.y <= goalpost.crossbarY + 6 && token.y >= goalpost.y - 8) {
           if (token.x >= goalpost.xMin + 4 && token.x <= goalpost.xMax - 4) {
-            recordOutcome(true); return;
+            recordResult(true); return;
           }
         }
-        if (token.y > canvas.height + 20 || token.y < 5 || token.x < 0 || token.x > canvas.width) {
-          recordOutcome(false);
+        if (token.y > canvas.height + 15 || token.y < 5 || token.x < 0 || token.x > canvas.width) {
+          recordResult(false);
         }
       }
     }
 
     function draw() {
-      ctx.fillStyle = '#0f3818';
+      // Vintage LED Green Grid Background
+      ctx.fillStyle = '#041407';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff';
-      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+      // Yard Line Hash Lines
+      ctx.strokeStyle = '#0f3818';
+      ctx.lineWidth = 1;
+      for (let y = 20; y < canvas.height; y += 20) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
 
-      ctx.beginPath();
-      ctx.moveTo(10, lineOfScrimmageY); ctx.lineTo(canvas.width - 10, lineOfScrimmageY);
-      ctx.strokeStyle = '#00f0ff'; ctx.lineWidth = 2; ctx.stroke();
+      // Line of Scrimmage Boundary
+      ctx.strokeStyle = '#39ff14';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, lineOfScrimmageY); ctx.lineTo(canvas.width, lineOfScrimmageY); ctx.stroke();
 
-      ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 4;
+      // Yellow LED Goalpost
+      ctx.strokeStyle = '#ffea00'; ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.moveTo(goalpost.xMin, goalpost.y); ctx.lineTo(goalpost.xMin, goalpost.crossbarY);
       ctx.lineTo(goalpost.xMax, goalpost.crossbarY); ctx.lineTo(goalpost.xMax, goalpost.y);
       ctx.moveTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY);
-      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 18);
+      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 15);
       ctx.stroke();
 
+      // Draw 7 Red LED Defender Dashes
+      ctx.fillStyle = '#ff2222';
       defenders.forEach(d => {
-        ctx.fillStyle = d.color;
         ctx.fillRect(d.x, d.y, d.width, d.height);
       });
 
-      // Draw Player Quarterback Marker
+      // Draw Quarterback LED Marker
       if (!token.inAir) {
-        ctx.fillStyle = '#00f0ff';
-        ctx.beginPath(); ctx.arc(playerPos.x, playerPos.y, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#39ff14';
+        ctx.fillRect(qbPos.x - 6, qbPos.y - 4, 12, 8);
       }
 
+      // Draw Flying MGM Token
       ctx.save();
       ctx.translate(token.x, token.y);
-      ctx.scale(token.scale, token.scale);
       ctx.rotate(token.rotation);
-
       if (mgmCoinImg.complete && mgmCoinImg.naturalWidth > 0) {
         ctx.drawImage(mgmCoinImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
       } else {
         ctx.beginPath(); ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffd700'; ctx.fill();
+        ctx.fillStyle = '#ffea00'; ctx.fill();
       }
       ctx.restore();
     }
