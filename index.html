@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarterback Maxx: MGM Token Flip</title>
+  <title>Quarterback Maxx: 50-Yard Field Goal Blitz</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,7 +12,7 @@
       user-select: none;
     }
     body {
-      background: #0d0614;
+      background: #0b0512;
       color: #fff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
@@ -24,10 +24,10 @@
     }
     header {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #00f0ff;
       text-shadow: 0 0 10px #00f0ff, 0 0 20px #ff007f;
       letter-spacing: 1px;
@@ -40,62 +40,92 @@
       color: #ff007f;
       text-shadow: 0 0 8px #ff007f;
       justify-content: center;
-      margin-top: 5px;
+      margin-top: 4px;
     }
     .game-container {
       position: relative;
       display: flex;
       align-items: flex-end;
       gap: 20px;
-      background: rgba(20, 10, 35, 0.85);
+      background: rgba(18, 8, 30, 0.9);
       padding: 20px;
       border-radius: 16px;
       border: 2px solid #00f0ff;
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
     }
-    /* Character Host Side Stage */
+    /* Side Stage & LED Meters */
     .character-stage {
       position: relative;
       width: 220px;
-      height: 400px;
+      height: 480px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
     }
+    .meters-panel {
+      width: 100%;
+      background: #120024;
+      border: 2px solid #00f0ff;
+      border-radius: 8px;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .meter-box {
+      background: #000;
+      border: 1px solid #ff007f;
+      border-radius: 4px;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+    .meter-title { color: #00f0ff; }
+    .meter-val {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #39ff14;
+      text-shadow: 0 0 5px #39ff14;
+    }
+    .meter-val.miss {
+      color: #ff0055;
+      text-shadow: 0 0 5px #ff0055;
+    }
     .character-stage img {
       width: 100%;
-      height: auto;
+      height: 320px;
       object-fit: contain;
       filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.5));
       transition: transform 0.15s ease;
     }
     .dialogue-box {
       position: absolute;
-      top: 0;
+      top: -35px;
       background: #120024;
       border: 2px solid #ff007f;
       color: #00f0ff;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-align: center;
       box-shadow: 0 0 10px #ff007f;
       width: 100%;
     }
     /* Canvas Area */
     canvas {
-      background: radial-gradient(circle at center, #231138 0%, #0a0312 100%);
       border: 2px solid #ff007f;
       border-radius: 12px;
-      cursor: grab;
-    }
-    canvas:active {
-      cursor: grabbing;
+      cursor: crosshair;
     }
     /* Controls Area */
     .controls-bar {
-      margin-top: 15px;
+      margin-top: 12px;
       display: flex;
       gap: 15px;
     }
@@ -103,8 +133,8 @@
       background: linear-gradient(135deg, #ff007f, #7928ca);
       color: #fff;
       border: 2px solid #00f0ff;
-      padding: 10px 20px;
-      font-size: 1rem;
+      padding: 8px 18px;
+      font-size: 0.95rem;
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
@@ -119,10 +149,8 @@
     /* Modal Stats Popup */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.85);
       display: flex;
       align-items: center;
@@ -168,27 +196,39 @@
 <body>
 
   <header>
-    <h1>QUARTERBACK MAXX: MGM TOKEN FLIP</h1>
+    <h1>QUARTERBACK MAXX: 50-YARD FIELD GOAL BLITZ</h1>
     <div class="hud">
       <div>SCORE: <span id="score">0</span></div>
-      <div>FLIPS: <span id="flips">10</span></div>
-      <div>ACCURACY: <span id="accuracy">0%</span></div>
+      <div>CHANCES LEFT: <span id="chances">10</span></div>
     </div>
   </header>
 
   <div class="game-container">
     <!-- Character Host Side Stage -->
     <div class="character-stage">
-      <div class="dialogue-box" id="dialogue">"Pull back on the MGM Token & launch!"</div>
+      <div class="dialogue-box" id="dialogue">"Click behind the 50 YD line to place & aim!"</div>
+      
+      <!-- Real-time LED Meters Mounted Above Quarterback Maxx -->
+      <div class="meters-panel">
+        <div class="meter-box">
+          <span class="meter-title">PASSES:</span>
+          <span class="meter-val" id="meter-passes">0</span>
+        </div>
+        <div class="meter-box">
+          <span class="meter-title">MISSES:</span>
+          <span class="meter-val miss" id="meter-misses">0</span>
+        </div>
+      </div>
+
       <img id="maxx-img" src="quarterbackmaxxmgmtoken.png" alt="Quarterback Maxx">
     </div>
 
-    <!-- Interactive Game Canvas -->
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <!-- Interactive Football Field Canvas -->
+    <canvas id="gameCanvas" width="550" height="480"></canvas>
   </div>
 
   <div class="controls-bar">
-    <button class="btn" onclick="resetGame()">RESET GAME</button>
+    <button class="btn" onclick="resetGame()">RESET DRIVE</button>
     <button class="btn" onclick="showStats()">VIEW STATS</button>
   </div>
 
@@ -197,16 +237,16 @@
     <div class="modal">
       <h2>DRIVE STATS</h2>
       <div class="stat-row"><span>Final Score:</span><span class="stat-value" id="stat-score">0</span></div>
-      <div class="stat-row"><span>Flips Used:</span><span class="stat-value" id="stat-flips">0</span></div>
-      <div class="stat-row"><span>Touchdowns / Hits:</span><span class="stat-value" id="stat-hits">0</span></div>
-      <div class="stat-row"><span>Target Accuracy:</span><span class="stat-value" id="stat-acc">0%</span></div>
+      <div class="stat-row"><span>Successful Passes:</span><span class="stat-value" id="stat-passes">0</span></div>
+      <div class="stat-row"><span>Missed Passes:</span><span class="stat-value" id="stat-misses">0</span></div>
+      <div class="stat-row"><span>Completion Rate:</span><span class="stat-value" id="stat-rate">0%</span></div>
       <br>
-      <button class="btn" onclick="closeStats()">PLAY AGAIN</button>
+      <button class="btn" onclick="closeStats()">NEW DRIVE</button>
     </div>
   </div>
 
   <script>
-    // Audio Synthesizer (Classic 1970s Handheld LED Sound Engine)
+    // Audio Synthesizer (Vintage LED Arcade Sound Engine)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playBeep(freq, type, duration) {
@@ -215,7 +255,7 @@
       const gain = audioCtx.createGain();
       osc.type = type || 'square';
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
@@ -223,121 +263,172 @@
       osc.stop(audioCtx.currentTime + duration);
     }
 
-    function playFlickSound() {
-      playBeep(300, 'square', 0.08);
-      setTimeout(() => playBeep(600, 'triangle', 0.1), 40);
+    function playBounceSound() {
+      playBeep(220, 'square', 0.05);
+      setTimeout(() => playBeep(440, 'triangle', 0.05), 30);
+    }
+
+    function playKickSound() {
+      playBeep(180, 'square', 0.08);
+      setTimeout(() => playBeep(350, 'sawtooth', 0.1), 40);
     }
 
     function playTouchdownSound() {
-      // Classic vintage victory fanfare
       const notes = [523, 659, 783, 1046, 783, 1046];
-      const times = [0, 100, 200, 300, 450, 600];
+      const times = [0, 90, 180, 270, 400, 520];
       notes.forEach((freq, idx) => {
-        setTimeout(() => playBeep(freq, 'square', 0.18), times[idx]);
+        setTimeout(() => playBeep(freq, 'square', 0.16), times[idx]);
       });
     }
 
     function playGameOverSound() {
-      const notes = [400, 350, 300, 250];
+      const notes = [380, 320, 270, 210];
       notes.forEach((freq, idx) => {
-        setTimeout(() => playBeep(freq, 'sawtooth', 0.2), idx * 120);
+        setTimeout(() => playBeep(freq, 'sawtooth', 0.2), idx * 110);
       });
     }
 
-    // Canvas & Game State Setup
+    // Setup Canvas & Game State
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
+    const lineOfScrimmageY = 360; // 50 Yard Line Boundary
     let score = 0;
-    let flips = 10;
-    let totalAttempts = 0;
-    let hits = 0;
+    let chances = 10;
+    let passes = 0;
+    let misses = 0;
     let isAiming = false;
-    let dragStart = { x: 0, y: 0 };
-    let dragCurrent = { x: 0, y: 0 };
 
-    // MGM Token Sprite / Object
-    const mgmTokenImg = new Image();
-    mgmTokenImg.src = 'quarterbackmaxxmgmtoken.png';
+    // Load Token Image
+    const mgmCoinImg = new Image();
+    mgmCoinImg.src = 'tranparent mgm coin1.jpg';
 
+    // Player Token State
     let token = {
-      x: 90,
-      y: 310,
-      radius: 18,
+      x: 275,
+      y: 420,
+      radius: 16,
       vx: 0,
       vy: 0,
       inAir: false,
-      rotation: 0,
-      flipSpeed: 0,
-      scale: 1
+      scale: 1,
+      rotation: 0
     };
 
-    // Moving Fairground Targets
-    const targets = [
-      { x: 380, y: 110, radius: 38, points: 100, color: '#00f0ff', vx: 1.5 },
-      { x: 480, y: 210, radius: 28, points: 250, color: '#ff007f', vx: -2.0 },
-      { x: 410, y: 310, radius: 20, points: 500, color: '#ffd700', vx: 2.8 }
-    ];
+    let dragStart = { x: 0, y: 0 };
+    let dragCurrent = { x: 0, y: 0 };
 
-    // Mouse / Touch Drag Input
-    canvas.addEventListener('mousedown', startDrag);
-    canvas.addEventListener('mousemove', drag);
-    canvas.addEventListener('mouseup', releaseDrag);
+    // Goalpost Specs
+    const goalpost = {
+      xMin: 210,
+      xMax: 340,
+      y: 55,
+      crossbarY: 75
+    };
 
-    function startDrag(e) {
-      if (token.inAir || flips <= 0) return;
+    // 7 Running Field Defenders
+    const defenders = [];
+    function initDefenders() {
+      defenders.length = 0;
+      const yPositions = [120, 160, 200, 240, 280, 310, 335];
+      for (let i = 0; i < 7; i++) {
+        defenders.push({
+          x: Math.random() * 380 + 85,
+          y: yPositions[i],
+          width: 38,
+          height: 18,
+          vx: (Math.random() > 0.5 ? 1 : -1) * (1.8 + Math.random() * 1.5),
+          color: i % 2 === 0 ? '#ff0055' : '#7928ca'
+        });
+      }
+    }
+    initDefenders();
+
+    // Mouse & Touch Controls
+    canvas.addEventListener('mousedown', startAim);
+    canvas.addEventListener('mousemove', aim);
+    canvas.addEventListener('mouseup', shootToken);
+
+    function startAim(e) {
+      if (token.inAir || chances <= 0) return;
       const rect = canvas.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
 
-      if (Math.hypot(mouseX - token.x, mouseY - token.y) < 40) {
+      // Ensure player shoots from behind 50-Yard Line
+      if (clickY >= lineOfScrimmageY) {
+        token.x = clickX;
+        token.y = clickY;
         isAiming = true;
         dragStart = { x: token.x, y: token.y };
-        dragCurrent = { x: mouseX, y: mouseY };
-        playBeep(220, 'square', 0.05);
+        dragCurrent = { x: clickX, y: clickY };
+        playBeep(260, 'square', 0.04);
+      } else {
+        document.getElementById('dialogue').textContent = '"Must shoot from BEHIND the 50 YD line!"';
       }
     }
 
-    function drag(e) {
+    function aim(e) {
       if (!isAiming) return;
       const rect = canvas.getBoundingClientRect();
       dragCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }
 
-    function releaseDrag() {
+    function shootToken() {
       if (!isAiming) return;
       isAiming = false;
 
       const dx = dragStart.x - dragCurrent.x;
       const dy = dragStart.y - dragCurrent.y;
 
-      token.vx = dx * 0.13;
-      token.vy = dy * 0.13;
+      // Minimum kick threshold
+      if (Math.hypot(dx, dy) < 15) return;
+
+      token.vx = dx * 0.14;
+      token.vy = dy * 0.14;
       token.inAir = true;
-      token.flipSpeed = Math.hypot(dx, dy) * 0.08;
 
-      flips--;
-      totalAttempts++;
-      document.getElementById('flips').textContent = flips;
-      document.getElementById('dialogue').textContent = '"Token in flight!"';
+      chances--;
+      document.getElementById('chances').textContent = chances;
+      document.getElementById('dialogue').textContent = '"Token kicked towards the Goalpost!"';
 
-      playFlickSound();
+      playKickSound();
+    }
+
+    function recordOutcome(success) {
+      if (success) {
+        score += 300;
+        passes++;
+        document.getElementById('score').textContent = score;
+        document.getElementById('meter-passes').textContent = passes;
+        document.getElementById('dialogue').textContent = '"FIELD GOAL IS GOOD! +300 PTS!"';
+
+        const img = document.getElementById('maxx-img');
+        img.style.transform = 'scale(1.1)';
+        setTimeout(() => img.style.transform = 'scale(1)', 180);
+
+        playTouchdownSound();
+      } else {
+        misses++;
+        document.getElementById('meter-misses').textContent = misses;
+        document.getElementById('dialogue').textContent = '"NO GOOD! Pass missed!"';
+        playBeep(130, 'sawtooth', 0.18);
+      }
+
+      resetToken();
     }
 
     function resetToken() {
-      token.x = 90;
-      token.y = 310;
+      token.x = 275;
+      token.y = 420;
       token.vx = 0;
       token.vy = 0;
-      token.rotation = 0;
       token.scale = 1;
+      token.rotation = 0;
       token.inAir = false;
 
-      let acc = totalAttempts > 0 ? Math.round((hits / totalAttempts) * 100) : 0;
-      document.getElementById('accuracy').textContent = acc + '%';
-
-      if (flips <= 0) {
-        document.getElementById('dialogue').textContent = '"Drive Complete! Check your Stats!"';
+      if (chances <= 0) {
+        document.getElementById('dialogue').textContent = '"Drive Over! Check your Stats!"';
         playGameOverSound();
         setTimeout(showStats, 800);
       }
@@ -345,23 +436,26 @@
 
     function resetGame() {
       score = 0;
-      flips = 10;
-      totalAttempts = 0;
-      hits = 0;
+      chances = 10;
+      passes = 0;
+      misses = 0;
       document.getElementById('score').textContent = '0';
-      document.getElementById('flips').textContent = '10';
-      document.getElementById('accuracy').textContent = '0%';
-      document.getElementById('dialogue').textContent = '"Pull back on the MGM Token & launch!"';
+      document.getElementById('chances').textContent = '10';
+      document.getElementById('meter-passes').textContent = '0';
+      document.getElementById('meter-misses').textContent = '0';
+      document.getElementById('dialogue').textContent = '"Click behind the 50 YD line to place & aim!"';
       closeStats();
+      initDefenders();
       resetToken();
     }
 
     function showStats() {
       document.getElementById('stat-score').textContent = score;
-      document.getElementById('stat-flips').textContent = totalAttempts;
-      document.getElementById('stat-hits').textContent = hits;
-      let acc = totalAttempts > 0 ? Math.round((hits / totalAttempts) * 100) : 0;
-      document.getElementById('stat-acc').textContent = acc + '%';
+      document.getElementById('stat-passes').textContent = passes;
+      document.getElementById('stat-misses').textContent = misses;
+      let total = passes + misses;
+      let rate = total > 0 ? Math.round((passes / total) * 100) : 0;
+      document.getElementById('stat-rate').textContent = rate + '%';
       document.getElementById('statsModal').classList.add('active');
     }
 
@@ -370,107 +464,165 @@
     }
 
     function update() {
-      // Targets Movement
-      targets.forEach(t => {
-        t.x += t.vx;
-        if (t.x - t.radius < 260 || t.x + t.radius > canvas.width - 20) {
-          t.vx *= -1;
+      // Defenders horizontal route running
+      defenders.forEach(d => {
+        d.x += d.vx;
+        if (d.x < 30 || d.x + d.width > canvas.width - 30) {
+          d.vx *= -1;
         }
       });
 
-      // Flying MGM Token Physics & Flip Rotation
+      // Token Flight Physics & Collision
       if (token.inAir) {
         token.x += token.vx;
         token.y += token.vy;
-        token.vy += 0.28; // Simulated gravity
-        token.rotation += token.flipSpeed;
-        token.scale = Math.max(0.4, token.scale - 0.009);
+        token.vy += 0.22; // Gravity
+        token.rotation += 0.2;
+        token.scale = Math.max(0.55, token.scale - 0.006);
 
-        // Check Target Hit
-        targets.forEach(t => {
-          const dist = Math.hypot(token.x - t.x, token.y - t.y);
-          if (dist < t.radius && token.scale < 0.85) {
-            score += t.points;
-            hits++;
-            document.getElementById('score').textContent = score;
-            document.getElementById('dialogue').textContent = `\"TOUCHDOWN! +${t.points} PTS!\"`;
-
-            // Mascot Bounce Animation
-            const img = document.getElementById('maxx-img');
-            img.style.transform = 'scale(1.1)';
-            setTimeout(() => img.style.transform = 'scale(1)', 180);
-
-            playTouchdownSound();
-            resetToken();
+        // Defender Bouncing Collision
+        defenders.forEach(d => {
+          if (
+            token.x + token.radius > d.x &&
+            token.x - token.radius < d.x + d.width &&
+            token.y + token.radius > d.y &&
+            token.y - token.radius < d.y + d.height
+          ) {
+            token.vy *= -0.85; // Bounce off blocker
+            token.vx *= 1.2;
+            playBounceSound();
           }
         });
 
-        // Out of Bounds Miss
-        if (token.y > canvas.height + 30 || token.x > canvas.width + 30) {
-          document.getElementById('dialogue').textContent = '"Incomplete! Adjust your pull strength!"';
-          playBeep(120, 'sawtooth', 0.15);
-          resetToken();
+        // Field Goal Post Detection (Score Condition)
+        if (token.y <= goalpost.crossbarY + 10 && token.y >= goalpost.y - 15) {
+          if (token.x >= goalpost.xMin + 5 && token.x <= goalpost.xMax - 5) {
+            recordOutcome(true);
+            return;
+          }
+        }
+
+        // Out of Bounds / Miss
+        if (token.y > canvas.height + 30 || token.y < 10 || token.x < 0 || token.x > canvas.width) {
+          recordOutcome(false);
         }
       }
     }
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function drawField() {
+      // Football Turf Background
+      ctx.fillStyle = '#0f3818';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Trajectory Line & Pull Power Meter
+      // Alternating Yard Stripes
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+      for (let y = 0; y < canvas.height; y += 40) {
+        if ((y / 40) % 2 === 0) ctx.fillRect(0, y, canvas.width, 40);
+      }
+
+      // Out of Bounds Sidelines
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#ffffff';
+      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      // 50-Yard Line of Scrimmage
+      ctx.beginPath();
+      ctx.moveTo(20, lineOfScrimmageY);
+      ctx.lineTo(canvas.width - 20, lineOfScrimmageY);
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Line Text
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('50 YD LINE OF SCRIMMAGE', 30, lineOfScrimmageY - 8);
+
+      // Hash Marks
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = 2;
+      for (let y = 40; y < canvas.height - 40; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(180, y); ctx.lineTo(190, y);
+        ctx.moveTo(360, y); ctx.lineTo(370, y);
+        ctx.stroke();
+      }
+
+      // Glowing Goalpost
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 5;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ffd700';
+
+      ctx.beginPath();
+      // Uprights
+      ctx.moveTo(goalpost.xMin, goalpost.y);
+      ctx.lineTo(goalpost.xMin, goalpost.crossbarY);
+      ctx.lineTo(goalpost.xMax, goalpost.crossbarY);
+      ctx.lineTo(goalpost.xMax, goalpost.y);
+      // Support Pole
+      ctx.moveTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY);
+      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 25);
+      ctx.stroke();
+      ctx.shadowBlur = 0; // Reset shadow
+    }
+
+    function draw() {
+      drawField();
+
+      // Draw 7 Running Blockers
+      defenders.forEach(d => {
+        ctx.fillStyle = d.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = d.color;
+        ctx.fillRect(d.x, d.y, d.width, d.height);
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('DEF', d.x + d.width / 2, d.y + 12);
+      });
+
+      // Aim Line & Launch Meter
       if (isAiming) {
         const dx = dragStart.x - dragCurrent.x;
         const dy = dragStart.y - dragCurrent.y;
-        const pullDist = Math.hypot(dx, dy);
 
-        // Trajectory Dots
         ctx.beginPath();
         ctx.moveTo(token.x, token.y);
-        ctx.lineTo(token.x + dx * 1.5, token.y + dy * 1.5);
+        ctx.lineTo(token.x + dx * 1.8, token.y + dy * 1.8);
         ctx.strokeStyle = '#ff007f';
         ctx.lineWidth = 3;
-        ctx.setLineDash([6, 6]);
+        ctx.setLineDash([5, 5]);
         ctx.stroke();
         ctx.setLineDash([]);
-
-        // Pull Intensity Bar Indicator
-        const maxPull = 150;
-        const intensity = Math.min(1, pullDist / maxPull);
-        ctx.fillStyle = `rgb(${Math.floor(intensity * 255)}, ${Math.floor((1 - intensity) * 255)}, 255)`;
-        ctx.fillRect(token.x - 25, token.y + 30, Math.min(pullDist, 50), 6);
       }
 
-      // Draw Fairground Targets
-      targets.forEach(t => {
+      // Draw Token Behind Line Indicator
+      if (!token.inAir) {
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.2)';
         ctx.beginPath();
-        ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(20, 10, 35, 0.7)';
+        ctx.arc(token.x, token.y, token.radius + 6, 0, Math.PI * 2);
         ctx.fill();
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = t.color;
-        ctx.stroke();
+      }
 
-        ctx.fillStyle = t.color;
-        ctx.font = 'bold 12px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(`${t.points}`, t.x, t.y + 4);
-      });
-
-      // Draw Rotating MGM Token
+      // Render MGM Token Image Projectile
       ctx.save();
       ctx.translate(token.x, token.y);
-      ctx.scale(token.scale, token.scale * Math.cos(token.rotation)); // Realistic 3D flip animation
+      ctx.scale(token.scale, token.scale);
+      ctx.rotate(token.rotation);
 
-      if (mgmTokenImg.complete && mgmTokenImg.naturalWidth > 0) {
-        ctx.drawImage(mgmTokenImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
+      if (mgmCoinImg.complete && mgmCoinImg.naturalWidth > 0) {
+        ctx.drawImage(mgmCoinImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
       } else {
-        // Fallback Render
+        // Fallback graphics
         ctx.beginPath();
         ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#ffd700';
         ctx.fill();
-        ctx.lineWidth = 3;
         ctx.strokeStyle = '#ff007f';
+        ctx.lineWidth = 3;
         ctx.stroke();
       }
       ctx.restore();
