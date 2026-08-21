@@ -2,156 +2,208 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarterback Maxx: 50-Yard Field Goal Blitz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Quarterback Maxx: Handheld Field Goal Blitz</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
     body {
       background: #0b0512;
       color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
-      overflow: hidden;
+      padding: 10px;
+      overflow-x: hidden;
     }
     header {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
+      width: 100%;
+      max-width: 480px;
     }
     h1 {
-      font-size: 2rem;
+      font-size: 1.2rem;
       color: #00f0ff;
-      text-shadow: 0 0 10px #00f0ff, 0 0 20px #ff007f;
-      letter-spacing: 1px;
+      text-shadow: 0 0 8px #00f0ff, 0 0 15px #ff007f;
+      letter-spacing: 0.5px;
     }
     .hud {
       display: flex;
-      gap: 25px;
-      font-size: 1.1rem;
+      justify-content: space-around;
+      font-size: 0.9rem;
       font-weight: bold;
       color: #ff007f;
-      text-shadow: 0 0 8px #ff007f;
-      justify-content: center;
-      margin-top: 4px;
+      text-shadow: 0 0 6px #ff007f;
+      margin-top: 2px;
     }
     .game-container {
       position: relative;
       display: flex;
-      align-items: flex-end;
-      gap: 20px;
-      background: rgba(18, 8, 30, 0.9);
-      padding: 20px;
-      border-radius: 16px;
-      border: 2px solid #00f0ff;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
-    }
-    /* Side Stage & LED Meters */
-    .character-stage {
-      position: relative;
-      width: 220px;
-      height: 480px;
-      display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
+      width: 100%;
+      max-width: 480px;
+      background: rgba(18, 8, 30, 0.95);
+      padding: 10px;
+      border-radius: 12px;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+    /* Side/Top Stage Panel */
+    .character-stage {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
     }
     .meters-panel {
-      width: 100%;
+      flex: 1;
       background: #120024;
-      border: 2px solid #00f0ff;
-      border-radius: 8px;
-      padding: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+      border: 1px solid #00f0ff;
+      border-radius: 6px;
+      padding: 4px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
     .meter-box {
       background: #000;
       border: 1px solid #ff007f;
-      border-radius: 4px;
-      padding: 4px 8px;
+      border-radius: 3px;
+      padding: 2px 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: monospace;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
     .meter-title { color: #00f0ff; }
     .meter-val {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: bold;
       color: #39ff14;
-      text-shadow: 0 0 5px #39ff14;
+      text-shadow: 0 0 4px #39ff14;
     }
     .meter-val.miss {
       color: #ff0055;
-      text-shadow: 0 0 5px #ff0055;
+      text-shadow: 0 0 4px #ff0055;
     }
     .character-stage img {
-      width: 100%;
-      height: 320px;
+      width: 75px;
+      height: 75px;
       object-fit: contain;
-      filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.5));
-      transition: transform 0.15s ease;
+      filter: drop-shadow(0 0 8px rgba(255, 0, 127, 0.5));
     }
     .dialogue-box {
-      position: absolute;
-      top: -35px;
+      font-size: 0.75rem;
       background: #120024;
-      border: 2px solid #ff007f;
+      border: 1px solid #ff007f;
       color: #00f0ff;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      padding: 4px 6px;
+      border-radius: 6px;
       text-align: center;
-      box-shadow: 0 0 10px #ff007f;
       width: 100%;
+      margin-bottom: 6px;
     }
-    /* Canvas Area */
+    /* Responsive Canvas Container */
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 11 / 10;
+    }
     canvas {
+      width: 100%;
+      height: 100%;
       border: 2px solid #ff007f;
-      border-radius: 12px;
-      cursor: crosshair;
+      border-radius: 8px;
+      touch-action: none;
     }
-    /* Controls Area */
-    .controls-bar {
-      margin-top: 12px;
+    /* Mobile Retro Touch Controls */
+    .mobile-controls {
       display: flex;
-      gap: 15px;
+      width: 100%;
+      max-width: 440px;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      gap: 10px;
     }
-    .btn {
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 38px);
+      grid-template-rows: repeat(2, 38px);
+      gap: 4px;
+    }
+    .pad-btn {
+      background: #120024;
+      border: 1.5px solid #00f0ff;
+      color: #00f0ff;
+      font-weight: bold;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+    }
+    .pad-btn:active {
+      background: #ff007f;
+      color: #fff;
+    }
+    .action-btn {
+      flex: 1;
+      height: 80px;
       background: linear-gradient(135deg, #ff007f, #7928ca);
       color: #fff;
       border: 2px solid #00f0ff;
-      padding: 8px 18px;
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
       text-shadow: 0 0 5px #00f0ff;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
-      transition: all 0.2s ease;
     }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+    .action-btn:active {
+      transform: scale(0.96);
+    }
+    /* Controls Bar */
+    .controls-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .btn {
+      flex: 1;
+      background: #120024;
+      color: #fff;
+      border: 1px solid #00f0ff;
+      padding: 8px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border-radius: 6px;
+      text-align: center;
     }
     /* Modal Stats Popup */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -159,6 +211,7 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
       z-index: 999;
+      padding: 15px;
     }
     .modal-overlay.active {
       opacity: 1;
@@ -166,49 +219,45 @@
     }
     .modal {
       background: #120024;
-      border: 3px solid #00f0ff;
-      box-shadow: 0 0 35px #ff007f;
-      border-radius: 16px;
-      padding: 25px 35px;
-      width: 380px;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 25px #ff007f;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 340px;
       text-align: center;
     }
     .modal h2 {
       color: #ff007f;
-      text-shadow: 0 0 10px #ff007f;
-      margin-bottom: 15px;
-      font-size: 1.8rem;
+      text-shadow: 0 0 8px #ff007f;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
     }
     .stat-row {
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
-      font-size: 1.1rem;
+      margin: 8px 0;
+      font-size: 0.95rem;
       border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
-      padding-bottom: 5px;
+      padding-bottom: 4px;
     }
-    .stat-value {
-      color: #00f0ff;
-      font-weight: bold;
-    }
+    .stat-value { color: #00f0ff; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>QUARTERBACK MAXX: 50-YARD FIELD GOAL BLITZ</h1>
+    <h1>QUARTERBACK MAXX: FIELD GOAL BLITZ</h1>
     <div class="hud">
       <div>SCORE: <span id="score">0</span></div>
-      <div>CHANCES LEFT: <span id="chances">10</span></div>
+      <div>CHANCES: <span id="chances">10</span></div>
     </div>
   </header>
 
   <div class="game-container">
-    <!-- Character Host Side Stage -->
+    <div class="dialogue-box" id="dialogue">Position player & tap SNAP / KICK!</div>
+
     <div class="character-stage">
-      <div class="dialogue-box" id="dialogue">"Click behind the 50 YD line to place & aim!"</div>
-      
-      <!-- Real-time LED Meters Mounted Above Quarterback Maxx -->
       <div class="meters-panel">
         <div class="meter-box">
           <span class="meter-title">PASSES:</span>
@@ -219,36 +268,47 @@
           <span class="meter-val miss" id="meter-misses">0</span>
         </div>
       </div>
-
       <img id="maxx-img" src="quarterbackmaxxmgmtoken.png" alt="Quarterback Maxx">
     </div>
 
-    <!-- Interactive Football Field Canvas -->
-    <canvas id="gameCanvas" width="550" height="480"></canvas>
+    <div class="canvas-wrapper">
+      <canvas id="gameCanvas" width="440" height="400"></canvas>
+    </div>
+
+    <!-- On-Screen Controls for Mobile Phones -->
+    <div class="mobile-controls">
+      <div class="dpad">
+        <div></div>
+        <button class="pad-btn" onclick="movePlayer(0, -15)">▲</button>
+        <div></div>
+        <button class="pad-btn" onclick="movePlayer(-15, 0)">◄</button>
+        <button class="pad-btn" onclick="movePlayer(0, 15)">▼</button>
+        <button class="pad-btn" onclick="movePlayer(15, 0)">►</button>
+      </div>
+      <button class="action-btn" onclick="triggerAction()">KICK / SNAP</button>
+    </div>
   </div>
 
   <div class="controls-bar">
     <button class="btn" onclick="resetGame()">RESET DRIVE</button>
-    <button class="btn" onclick="showStats()">VIEW STATS</button>
+    <button class="btn" onclick="showStats()">STATS</button>
   </div>
 
-  <!-- Stats Modal -->
   <div class="modal-overlay" id="statsModal">
     <div class="modal">
       <h2>DRIVE STATS</h2>
       <div class="stat-row"><span>Final Score:</span><span class="stat-value" id="stat-score">0</span></div>
-      <div class="stat-row"><span>Successful Passes:</span><span class="stat-value" id="stat-passes">0</span></div>
+      <div class="stat-row"><span>Passes / Goals:</span><span class="stat-value" id="stat-passes">0</span></div>
       <div class="stat-row"><span>Missed Passes:</span><span class="stat-value" id="stat-misses">0</span></div>
-      <div class="stat-row"><span>Completion Rate:</span><span class="stat-value" id="stat-rate">0%</span></div>
+      <div class="stat-row"><span>Completion:</span><span class="stat-value" id="stat-rate">0%</span></div>
       <br>
       <button class="btn" onclick="closeStats()">NEW DRIVE</button>
     </div>
   </div>
 
   <script>
-    // Audio Synthesizer (Vintage LED Arcade Sound Engine)
+    // Sound Engine (Retro LED Handheld Beeps)
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
     function playBeep(freq, type, duration) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
@@ -257,196 +317,137 @@
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
       gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
 
-    function playBounceSound() {
-      playBeep(220, 'square', 0.05);
-      setTimeout(() => playBeep(440, 'triangle', 0.05), 30);
-    }
-
-    function playKickSound() {
-      playBeep(180, 'square', 0.08);
-      setTimeout(() => playBeep(350, 'sawtooth', 0.1), 40);
-    }
-
-    function playTouchdownSound() {
-      const notes = [523, 659, 783, 1046, 783, 1046];
-      const times = [0, 90, 180, 270, 400, 520];
-      notes.forEach((freq, idx) => {
-        setTimeout(() => playBeep(freq, 'square', 0.16), times[idx]);
-      });
-    }
-
-    function playGameOverSound() {
-      const notes = [380, 320, 270, 210];
-      notes.forEach((freq, idx) => {
-        setTimeout(() => playBeep(freq, 'sawtooth', 0.2), idx * 110);
-      });
-    }
-
-    // Setup Canvas & Game State
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const lineOfScrimmageY = 360; // 50 Yard Line Boundary
-    let score = 0;
-    let chances = 10;
-    let passes = 0;
-    let misses = 0;
+    const lineOfScrimmageY = 300;
+    let score = 0, chances = 10, passes = 0, misses = 0;
     let isAiming = false;
 
-    // Load Token Image
     const mgmCoinImg = new Image();
     mgmCoinImg.src = 'tranparent mgm coin1.jpg';
 
-    // Player Token State
-    let token = {
-      x: 275,
-      y: 420,
-      radius: 16,
-      vx: 0,
-      vy: 0,
-      inAir: false,
-      scale: 1,
-      rotation: 0
-    };
+    let token = { x: 220, y: 350, radius: 14, vx: 0, vy: 0, inAir: false, scale: 1, rotation: 0 };
+    let playerPos = { x: 220, y: 350 };
+    let dragStart = { x: 0, y: 0 }, dragCurrent = { x: 0, y: 0 };
 
-    let dragStart = { x: 0, y: 0 };
-    let dragCurrent = { x: 0, y: 0 };
+    const goalpost = { xMin: 160, xMax: 280, y: 40, crossbarY: 58 };
 
-    // Goalpost Specs
-    const goalpost = {
-      xMin: 210,
-      xMax: 340,
-      y: 55,
-      crossbarY: 75
-    };
-
-    // 7 Running Field Defenders
     const defenders = [];
     function initDefenders() {
       defenders.length = 0;
-      const yPositions = [120, 160, 200, 240, 280, 310, 335];
+      const yPositions = [90, 130, 170, 210, 240, 265, 285];
       for (let i = 0; i < 7; i++) {
         defenders.push({
-          x: Math.random() * 380 + 85,
+          x: Math.random() * 300 + 40,
           y: yPositions[i],
-          width: 38,
-          height: 18,
-          vx: (Math.random() > 0.5 ? 1 : -1) * (1.8 + Math.random() * 1.5),
+          width: 32,
+          height: 14,
+          vx: (Math.random() > 0.5 ? 1 : -1) * (1.6 + Math.random() * 1.2),
           color: i % 2 === 0 ? '#ff0055' : '#7928ca'
         });
       }
     }
     initDefenders();
 
-    // Mouse & Touch Controls
-    canvas.addEventListener('mousedown', startAim);
-    canvas.addEventListener('mousemove', aim);
-    canvas.addEventListener('mouseup', shootToken);
+    function movePlayer(dx, dy) {
+      if (token.inAir) return;
+      playerPos.x = Math.max(30, Math.min(canvas.width - 30, playerPos.x + dx));
+      playerPos.y = Math.max(lineOfScrimmageY, Math.min(canvas.height - 25, playerPos.y + dy));
+      token.x = playerPos.x;
+      token.y = playerPos.y;
+      playBeep(200, 'square', 0.03);
+    }
 
-    function startAim(e) {
+    function triggerAction() {
       if (token.inAir || chances <= 0) return;
-      const rect = canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      // Ensure player shoots from behind 50-Yard Line
-      if (clickY >= lineOfScrimmageY) {
-        token.x = clickX;
-        token.y = clickY;
-        isAiming = true;
-        dragStart = { x: token.x, y: token.y };
-        dragCurrent = { x: clickX, y: clickY };
-        playBeep(260, 'square', 0.04);
-      } else {
-        document.getElementById('dialogue').textContent = '"Must shoot from BEHIND the 50 YD line!"';
-      }
-    }
-
-    function aim(e) {
-      if (!isAiming) return;
-      const rect = canvas.getBoundingClientRect();
-      dragCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    function shootToken() {
-      if (!isAiming) return;
-      isAiming = false;
-
-      const dx = dragStart.x - dragCurrent.x;
-      const dy = dragStart.y - dragCurrent.y;
-
-      // Minimum kick threshold
-      if (Math.hypot(dx, dy) < 15) return;
-
-      token.vx = dx * 0.14;
-      token.vy = dy * 0.14;
+      token.vx = (Math.random() - 0.5) * 2;
+      token.vy = -7.5;
       token.inAir = true;
-
       chances--;
       document.getElementById('chances').textContent = chances;
-      document.getElementById('dialogue').textContent = '"Token kicked towards the Goalpost!"';
-
-      playKickSound();
+      document.getElementById('dialogue').textContent = '"KICK IS UP!"';
+      playBeep(320, 'square', 0.08);
     }
+
+    // Touch Drag Controls directly on Canvas
+    canvas.addEventListener('touchstart', (e) => {
+      if (token.inAir || chances <= 0) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const tx = (touch.clientX - rect.left) * (canvas.width / rect.width);
+      const ty = (touch.clientY - rect.top) * (canvas.height / rect.height);
+
+      if (ty >= lineOfScrimmageY) {
+        playerPos.x = tx; playerPos.y = ty;
+        token.x = tx; token.y = ty;
+        isAiming = true;
+        dragStart = { x: tx, y: ty };
+        dragCurrent = { x: tx, y: ty };
+      }
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isAiming) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      dragCurrent = {
+        x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+        y: (touch.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    });
+
+    canvas.addEventListener('touchend', () => {
+      if (!isAiming) return;
+      isAiming = false;
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      if (Math.hypot(dx, dy) > 10) {
+        token.vx = dx * 0.12;
+        token.vy = dy * 0.12;
+        token.inAir = true;
+        chances--;
+        document.getElementById('chances').textContent = chances;
+        document.getElementById('dialogue').textContent = '"TOKEN IN FLIGHT!"';
+        playBeep(350, 'square', 0.08);
+      }
+    });
 
     function recordOutcome(success) {
       if (success) {
-        score += 300;
-        passes++;
+        score += 300; passes++;
         document.getElementById('score').textContent = score;
         document.getElementById('meter-passes').textContent = passes;
-        document.getElementById('dialogue').textContent = '"FIELD GOAL IS GOOD! +300 PTS!"';
-
-        const img = document.getElementById('maxx-img');
-        img.style.transform = 'scale(1.1)';
-        setTimeout(() => img.style.transform = 'scale(1)', 180);
-
-        playTouchdownSound();
+        document.getElementById('dialogue').textContent = '"FIELD GOAL IS GOOD! +300"';
+        playBeep(523, 'square', 0.15);
       } else {
         misses++;
         document.getElementById('meter-misses').textContent = misses;
         document.getElementById('dialogue').textContent = '"NO GOOD! Pass missed!"';
-        playBeep(130, 'sawtooth', 0.18);
+        playBeep(130, 'sawtooth', 0.15);
       }
-
       resetToken();
     }
 
     function resetToken() {
-      token.x = 275;
-      token.y = 420;
-      token.vx = 0;
-      token.vy = 0;
-      token.scale = 1;
-      token.rotation = 0;
-      token.inAir = false;
-
-      if (chances <= 0) {
-        document.getElementById('dialogue').textContent = '"Drive Over! Check your Stats!"';
-        playGameOverSound();
-        setTimeout(showStats, 800);
-      }
+      token.x = playerPos.x;
+      token.y = playerPos.y;
+      token.vx = 0; token.vy = 0;
+      token.scale = 1; token.inAir = false;
+      if (chances <= 0) setTimeout(showStats, 600);
     }
 
     function resetGame() {
-      score = 0;
-      chances = 10;
-      passes = 0;
-      misses = 0;
+      score = 0; chances = 10; passes = 0; misses = 0;
       document.getElementById('score').textContent = '0';
       document.getElementById('chances').textContent = '10';
       document.getElementById('meter-passes').textContent = '0';
       document.getElementById('meter-misses').textContent = '0';
-      document.getElementById('dialogue').textContent = '"Click behind the 50 YD line to place & aim!"';
-      closeStats();
-      initDefenders();
-      resetToken();
+      closeStats(); initDefenders(); resetToken();
     }
 
     function showStats() {
@@ -454,160 +455,73 @@
       document.getElementById('stat-passes').textContent = passes;
       document.getElementById('stat-misses').textContent = misses;
       let total = passes + misses;
-      let rate = total > 0 ? Math.round((passes / total) * 100) : 0;
-      document.getElementById('stat-rate').textContent = rate + '%';
+      document.getElementById('stat-rate').textContent = (total > 0 ? Math.round((passes / total) * 100) : 0) + '%';
       document.getElementById('statsModal').classList.add('active');
     }
 
-    function closeStats() {
-      document.getElementById('statsModal').classList.remove('active');
-    }
+    function closeStats() { document.getElementById('statsModal').classList.remove('active'); }
 
     function update() {
-      // Defenders horizontal route running
       defenders.forEach(d => {
         d.x += d.vx;
-        if (d.x < 30 || d.x + d.width > canvas.width - 30) {
-          d.vx *= -1;
-        }
+        if (d.x < 15 || d.x + d.width > canvas.width - 15) d.vx *= -1;
       });
 
-      // Token Flight Physics & Collision
       if (token.inAir) {
         token.x += token.vx;
         token.y += token.vy;
-        token.vy += 0.22; // Gravity
+        token.vy += 0.22;
         token.rotation += 0.2;
-        token.scale = Math.max(0.55, token.scale - 0.006);
+        token.scale = Math.max(0.6, token.scale - 0.005);
 
-        // Defender Bouncing Collision
         defenders.forEach(d => {
-          if (
-            token.x + token.radius > d.x &&
-            token.x - token.radius < d.x + d.width &&
-            token.y + token.radius > d.y &&
-            token.y - token.radius < d.y + d.height
-          ) {
-            token.vy *= -0.85; // Bounce off blocker
-            token.vx *= 1.2;
-            playBounceSound();
+          if (token.x > d.x && token.x < d.x + d.width && token.y > d.y && token.y < d.y + d.height) {
+            token.vy *= -0.8; token.vx *= 1.2;
+            playBeep(220, 'square', 0.04);
           }
         });
 
-        // Field Goal Post Detection (Score Condition)
-        if (token.y <= goalpost.crossbarY + 10 && token.y >= goalpost.y - 15) {
-          if (token.x >= goalpost.xMin + 5 && token.x <= goalpost.xMax - 5) {
-            recordOutcome(true);
-            return;
+        if (token.y <= goalpost.crossbarY + 8 && token.y >= goalpost.y - 10) {
+          if (token.x >= goalpost.xMin + 4 && token.x <= goalpost.xMax - 4) {
+            recordOutcome(true); return;
           }
         }
-
-        // Out of Bounds / Miss
-        if (token.y > canvas.height + 30 || token.y < 10 || token.x < 0 || token.x > canvas.width) {
+        if (token.y > canvas.height + 20 || token.y < 5 || token.x < 0 || token.x > canvas.width) {
           recordOutcome(false);
         }
       }
     }
 
-    function drawField() {
-      // Football Turf Background
+    function draw() {
       ctx.fillStyle = '#0f3818';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Alternating Yard Stripes
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-      for (let y = 0; y < canvas.height; y += 40) {
-        if ((y / 40) % 2 === 0) ctx.fillRect(0, y, canvas.width, 40);
-      }
-
-      // Out of Bounds Sidelines
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = '#ffffff';
-      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
-
-      // 50-Yard Line of Scrimmage
-      ctx.beginPath();
-      ctx.moveTo(20, lineOfScrimmageY);
-      ctx.lineTo(canvas.width - 20, lineOfScrimmageY);
-      ctx.strokeStyle = '#00f0ff';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // Line Text
-      ctx.fillStyle = '#00f0ff';
-      ctx.font = 'bold 12px sans-serif';
-      ctx.fillText('50 YD LINE OF SCRIMMAGE', 30, lineOfScrimmageY - 8);
-
-      // Hash Marks
-      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-      ctx.lineWidth = 2;
-      for (let y = 40; y < canvas.height - 40; y += 20) {
-        ctx.beginPath();
-        ctx.moveTo(180, y); ctx.lineTo(190, y);
-        ctx.moveTo(360, y); ctx.lineTo(370, y);
-        ctx.stroke();
-      }
-
-      // Glowing Goalpost
-      ctx.strokeStyle = '#ffd700';
-      ctx.lineWidth = 5;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = '#ffd700';
+      ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff';
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
 
       ctx.beginPath();
-      // Uprights
-      ctx.moveTo(goalpost.xMin, goalpost.y);
-      ctx.lineTo(goalpost.xMin, goalpost.crossbarY);
-      ctx.lineTo(goalpost.xMax, goalpost.crossbarY);
-      ctx.lineTo(goalpost.xMax, goalpost.y);
-      // Support Pole
+      ctx.moveTo(10, lineOfScrimmageY); ctx.lineTo(canvas.width - 10, lineOfScrimmageY);
+      ctx.strokeStyle = '#00f0ff'; ctx.lineWidth = 2; ctx.stroke();
+
+      ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(goalpost.xMin, goalpost.y); ctx.lineTo(goalpost.xMin, goalpost.crossbarY);
+      ctx.lineTo(goalpost.xMax, goalpost.crossbarY); ctx.lineTo(goalpost.xMax, goalpost.y);
       ctx.moveTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY);
-      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 25);
+      ctx.lineTo((goalpost.xMin + goalpost.xMax) / 2, goalpost.crossbarY + 18);
       ctx.stroke();
-      ctx.shadowBlur = 0; // Reset shadow
-    }
 
-    function draw() {
-      drawField();
-
-      // Draw 7 Running Blockers
       defenders.forEach(d => {
         ctx.fillStyle = d.color;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = d.color;
         ctx.fillRect(d.x, d.y, d.width, d.height);
-        ctx.shadowBlur = 0;
-
-        ctx.fillStyle = '#fff';
-        ctx.font = '9px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('DEF', d.x + d.width / 2, d.y + 12);
       });
 
-      // Aim Line & Launch Meter
-      if (isAiming) {
-        const dx = dragStart.x - dragCurrent.x;
-        const dy = dragStart.y - dragCurrent.y;
-
-        ctx.beginPath();
-        ctx.moveTo(token.x, token.y);
-        ctx.lineTo(token.x + dx * 1.8, token.y + dy * 1.8);
-        ctx.strokeStyle = '#ff007f';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([5, 5]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      // Draw Token Behind Line Indicator
+      // Draw Player Quarterback Marker
       if (!token.inAir) {
-        ctx.fillStyle = 'rgba(0, 240, 255, 0.2)';
-        ctx.beginPath();
-        ctx.arc(token.x, token.y, token.radius + 6, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath(); ctx.arc(playerPos.x, playerPos.y, 8, 0, Math.PI * 2); ctx.fill();
       }
 
-      // Render MGM Token Image Projectile
       ctx.save();
       ctx.translate(token.x, token.y);
       ctx.scale(token.scale, token.scale);
@@ -616,24 +530,13 @@
       if (mgmCoinImg.complete && mgmCoinImg.naturalWidth > 0) {
         ctx.drawImage(mgmCoinImg, -token.radius, -token.radius, token.radius * 2, token.radius * 2);
       } else {
-        // Fallback graphics
-        ctx.beginPath();
-        ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#ffd700';
-        ctx.fill();
-        ctx.strokeStyle = '#ff007f';
-        ctx.lineWidth = 3;
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, token.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffd700'; ctx.fill();
       }
       ctx.restore();
     }
 
-    function loop() {
-      update();
-      draw();
-      requestAnimationFrame(loop);
-    }
-
+    function loop() { update(); draw(); requestAnimationFrame(loop); }
     loop();
   </script>
 </body>
